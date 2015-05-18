@@ -1,0 +1,2 @@
+module HomeFeedHelper
+end
