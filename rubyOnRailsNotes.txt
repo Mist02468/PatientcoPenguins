@@ -1,0 +1,157 @@
+https://bitnami.com/stack/ruby/installer (Ruby Stack 2.0.0-26)
+cd rubystack-2.0.0-26/
+./rubyconsole
+cd projects
+rails new patientcoPenguins
+./ctlscript.sh start (http://localhost:8080)
+cd patientcoPenguins
+rails server (http://localhost:3000/)
+rails generate controller homeFeed index (http://localhost:3000/home_feed/index)
+cd git
+git config --global user.name "Mist02468"
+git config --global user.email "mist@ptd.net"
+cd projects/patientcoPenguins
+git init
+git status
+git remote add origin git@github.com:Mist02468/PatientcoPenguins.git (https://help.github.com/articles/generating-ssh-keys/)
+sudo apt-get install sqlite3
+sudo apt-get install rake
+
+Notes from Ruby Lynda Tutorial
+rake db:schema:dump
+rake -T
+rails generate migration DoNothingYet
+def up, def down
+rails generate model User
+create_table : users do |t| t.column "first_name", :string, :limit => 25
+t.timestamps (created_at and updated_at) [and automatically adds id column]
+execute()
+t.integer "subject_id" or t.references :subject
+add_index("pages", "subject_id")
+rake db:migrate RAILS_ENV=development
+rake db:migrate(:up/:down/:redo) VERSION=0
+rake db:migrate:status
+ActiveRecord
+user = User.new
+user.first_name = "Kevin"
+user.save
+user.delete
+ActiveRelation
+users = User.where(:first_name => "Kevin")
+users = users.order("last_name ASC").limit(5).offset(1)
+users = users.include("articles_authored)
+self.table_name = "" (if not using the default)
+rails console development
+subject.new_record?
+subject = Subject.create(:name => "Second")
+subject = Subject.find(1)
+subject.update_attributes(:name => "Next")
+subject.destroy()
+Subject.find_by_id(2)
+Subject.find_by_
+Subject.all
+subjects.to_sql
+Subjects.where(["visible = ?", true]).first
+scope :active, lambda {where(:active => true)} [essentially def self.active where(:active => true) end]
+Classroom has_one :teacher
+Teacher belongs_to :classroom
+Teacher has_many :courses
+Course belongs_to :teacher
+Course has_and_belongs_to_many :students
+Student has_and_belongs_to_many :courses
+subject.pages << page
+subject.pages.delete(page)
+subject.pages.destroy(page)
+subject.pages.clear
+subject.pages.empty?
+subject.pages.size
+first_table_second_table
+has_and_belongs_to_many :editors, :class_name => 'AdminUser'
+create [new, create], read [index, show], update [edit, update], delete [delete, destroy]
+rails generate controller Subjects index show new edit delete
+<%= form_tag(:action => 'create') do %> or form_for(:subject, :url => {:action...
+<%= text_field_tag('subject[name]') %> or text_field(:subject, :name)
+<%= submit_tag("Create Subject") %>
+<% end %>
+render('new')
+private
+    def subject_params
+        params.require(:subject).permit(:name, :position, :visible)
+@subject = Subject.net(subject_params)
+flash[:notice/:error] = "Subject #{subject.name} destroyed successfully."
+<% if !flash[:notice].blank? %>
+    <%= flash[:notice] %>
+application.html.erb (in views/layouts) get this default unless layout false or say layout "admin"
+<body>
+    <%= yield %>
+</body>
+_form.html.erb (partial template)
+<% render(:partial => "form", :locals => {:f => f}) %>
+simple_format(word_wrap()), truncate(), pluralize(), etc.
+<tr class="<%=cycle('odd', 'even') %>">
+number_to_human(), number_to_rounded(), etc.
+Time.now.last_year.end_of_month.beginning_of_day
+config/initializers/date_formats.rb
+app/helpers/application_helper.rb
+content_tag(:span)
+html_escape() aka h() [automatically called, so whitelist using raw() or html_safe]
+strip_links(), strip_tags(), sanitize()
+Asset Pipeline (served from public/assets/application...) after RAILS_ENV=production bundle exec rake assets:precompile
+app/assets rather than public/
+app/assets/stylesheets/application.css *= require_self, *= require_tree .
+<%= stylesheet_link_tag('application') %> in layout
+gem jquery-rails //=require jquery
+<%= javascript_include_tag('application') %> in layout, usually head
+<%= javascript_tag do %>
+...('#{j(text)}';") %>
+public/images for user-uploaded images (Paperclip, CarrierWave gems to help)
+<%= image_tag('logo.png') %>
+url('/assets/footer_gradient.png') for css
+f.file_field(:logo) #requires :html => {:multipart => true}
+<%= f.label(:url, "URL") %>
+f.select(:position, 1..@subject_count)
+@subject_count = Subject.count
+f.select(:subject_id, @subjects.map {|s| [s.name, s.id]})
+f.date_select()
+f.time_select()
+object.errors
+validates_presence_of :name in model (10 methods, all start with validates_)
+views/application (for shared partials)
+field_with_errors div class
+protect_from_forgery with: :exception in ApplicationController
+<%= csrf_meta_tag %> for JavaScript and Ajax
+validates :attribute, ...
+validate :custom_method def custom_method errors.add(:username, "")
+Blowfish (gem bcrypt-ruby)
+has_secure_password (table needs string column password_digest)
+user.password (and .password_confirmation sets .password_digest)
+authenticate(plaintext_password)
+params[:username].present?
+cookies[:username] = {:value => "jsmith", :expires => 1.week.from_now}
+session[:username] = "jsmith" (Rubygem if you want database storage, default is super cookie [encoded and digest val to prevent tampering])
+config/initializers/secret_token.rb (don't comit, and if changed [rake secret], invalidates all current cookies)
+config/initializers/session_store.rb
+just set session[:user_id], set to nil to logout
+class AccessController < ApplicationController before_action :confirm_logged_in, :except => [:login, :attempt_login, :logout] private def confirm_logged_in redirect_to(:controller => 'access', :action => 'login') return false end
+Popular Rubygems: acts_as_list, will_paginate, exception_notification, paperclip, carrierwave, delayed_job, friendly_id, devise, restful_authentication, authlogic, cancan, magick, nokogiri, acitvemerchant, acts_as_tree, acts_as_taggable, geokit, country_select
+RubyGems.org, copy Gemline file line, bundle install, call gem's name in the file
+before_validation, before_save, ... (after versions too, they're ActiveRecord callbacks
+In models, use self
+subject.touch (updates :updated_at)
+has_many :pages, :dependent => :destroy
+get 'show/:permalink', :to => 'public#show'
+link_to_unless_current()
+REST: GET, POST, PUT, PATCH, DELETE
+RESTful Routes - resources :subjects (can add :except) do member (for others might use collection) do get :delete end end (can nest)
+subjects_path, subject_path(:id), edit_subject_path, etc.
+form_for(@subject) do |f| end
+log/development.log
+logger.debug() [in controllers]
+rake log:clear
+puts object.inspect
+<%= debug(object) %>
+gem ruby-debug
+gem exception_notification
+
+
+
