@@ -11,8 +11,7 @@ class AccessController < ApplicationController
 
     client = OAuth2::Client.new('75yetg1f8atx89', 'le39CGDc1yQLCo9U', :site => 'https://www.linkedin.com/', :authorize_url => '/uas/oauth2/authorization')
 
-	#redirect_to client.auth_code.authorize_url(:redirect_uri => 'http://localhost:3000/access/finishLinkedInAuth') + '&state=' + getRandomState #might want to apply for '&scope=r_fullprofile' and more
-	puts client.auth_code.authorize_url(:redirect_uri => 'http://localhost:3000/access/finishLinkedInAuth') + '&state=' + getRandomState #might want to apply for '&scope=r_fullprofile' and more
+	redirect_to client.auth_code.authorize_url(:redirect_uri => 'http://localhost:3000/access/finishLinkedInAuth') + '&state=' + getRandomState #might want to apply for '&scope=r_fullprofile' and more
   end
 
   def finishLinkedInAuth
