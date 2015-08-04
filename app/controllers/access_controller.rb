@@ -24,9 +24,8 @@ class AccessController < ApplicationController
       client = OAuth2::Client.new('75yetg1f8atx89', 'le39CGDc1yQLCo9U', :site => 'https://www.linkedin.com/', :token_url => '/uas/oauth2/accessToken')
       token = client.auth_code.get_token(params[:code], :redirect_uri => 'http://localhost:3000/access/finishLinkedInAuth')
 
-      response = token.get('https://api.linkedin.com/v1/people/', :params => { 'format' => 'json' }, :headers => { 'authorization' => 'Bearer ' + token.token })
-      pp response
-      #response.class.name
+      response = token.get('https://api.linkedin.com/v1/people/~?format=json', :headers => { 'authorization' => 'Bearer ' + token.token })
+      pp response.response.env['body']
     elsif params[:error].present? && params[:error_description].present?
       puts "Rejected"
     else
