@@ -1,4 +1,12 @@
 Rails.application.routes.draw do
+  get 'access/login'
+
+  get 'access/logout'
+
+  get 'access/startLinkedInAuth'
+
+  get 'access/finishLinkedInAuth'
+
   get 'home_feed/index'
 
   # The priority is based upon order of creation: first created -> highest priority.
