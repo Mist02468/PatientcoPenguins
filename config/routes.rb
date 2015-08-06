@@ -1,13 +1,19 @@
 Rails.application.routes.draw do
+
+  get 'event/create'
+  get 'event/join'
+  get 'event/invite'
+
   get 'access/login'
-
-  get 'access/logout'
-
-  get 'access/startLinkedInAuth'
-
+  get 'access/logout' 
   get 'access/finishLinkedInAuth'
 
   get 'home_feed/index'
+  
+  #helper methods, to remove from this list after development
+  get 'access/startLinkedInAuth'
+  get 'event/createGoogleDoc'
+  get 'event/createGoogleHangoutOnAir'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
