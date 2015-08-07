@@ -1,5 +1,20 @@
 Rails.application.routes.draw do
 
+  get 'inbox/send'
+  get 'inbox/read'
+
+  get 'profile/report'
+  get 'profile/message'
+  get 'profile/subscribe'
+
+  get 'post/create'
+  get 'post/comment'
+  get 'post/upvote'
+
+  get 'search/searchByTag'
+  get 'search/searchByText'
+  get 'search/searchByUser'
+
   get 'event/create'
   get 'event/join'
   get 'event/invite'
@@ -9,6 +24,7 @@ Rails.application.routes.draw do
   get 'access/finishLinkedInAuth'
 
   get 'home_feed/index'
+  get 'home_feed/subscribe'
   
   #helper methods, to remove from this list after development
   get 'access/startLinkedInAuth'

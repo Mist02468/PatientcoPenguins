@@ -4,4 +4,11 @@ class HomeFeedController < ApplicationController
 	
   def index
   end
+  
+  def subscribe
+	if params[:tag].present?
+      puts "Successful"
+    else
+    end
+  end
 end
