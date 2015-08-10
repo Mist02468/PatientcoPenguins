@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150808040852) do
+ActiveRecord::Schema.define(version: 20150810202307) do
 
   create_table "events", force: :cascade do |t|
     t.string   "topic"
@@ -50,6 +50,11 @@ ActiveRecord::Schema.define(version: 20150808040852) do
     t.integer "tag_id",  null: false
   end
 
+  create_table "user_tag_subscriptions", id: false, force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "tag_id",  null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "firstName"
     t.string   "lastName"
@@ -59,8 +64,9 @@ ActiveRecord::Schema.define(version: 20150808040852) do
     t.string   "position"
     t.string   "company"
     t.integer  "reportedCount"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.integer  "subscribingUser_id"
   end
 
   create_table "users_attending_event", id: false, force: :cascade do |t|
