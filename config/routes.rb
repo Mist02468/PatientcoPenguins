@@ -1,8 +1,5 @@
 Rails.application.routes.draw do
 
-  get 'inbox/send'
-  get 'inbox/read'
-
   get 'profile/report'
   get 'profile/message'
   get 'profile/subscribe'
