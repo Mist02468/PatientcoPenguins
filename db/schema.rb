@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150810202307) do
+ActiveRecord::Schema.define(version: 20150907131651) do
 
   create_table "events", force: :cascade do |t|
     t.string   "topic"
@@ -20,13 +20,9 @@ ActiveRecord::Schema.define(version: 20150810202307) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "messages", force: :cascade do |t|
-    t.string   "subject"
-    t.text     "text"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.integer  "sender_id"
-    t.integer  "recipient_id"
+  create_table "events_users", id: false, force: :cascade do |t|
+    t.integer "event_id", null: false
+    t.integer "user_id",  null: false
   end
 
   create_table "posts", force: :cascade do |t|
@@ -41,37 +37,42 @@ ActiveRecord::Schema.define(version: 20150810202307) do
 
   add_index "posts", ["user_id"], name: "index_posts_on_user_id"
 
-  create_table "tags", force: :cascade do |t|
-    t.string "name"
-  end
-
-  create_table "tags_on_post", id: false, force: :cascade do |t|
+  create_table "posts_tags", id: false, force: :cascade do |t|
     t.integer "post_id", null: false
     t.integer "tag_id",  null: false
   end
 
-  create_table "user_tag_subscriptions", id: false, force: :cascade do |t|
+  create_table "tags", force: :cascade do |t|
+    t.string "name"
+  end
+
+  create_table "tags_users", id: false, force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "tag_id",  null: false
   end
+
+  create_table "user_subscriptions", force: :cascade do |t|
+    t.integer  "subscriber_id"
+    t.integer  "subscribed_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "user_subscriptions", ["subscribed_id"], name: "index_user_subscriptions_on_subscribed_id"
+  add_index "user_subscriptions", ["subscriber_id", "subscribed_id"], name: "index_user_subscriptions_on_subscriber_id_and_subscribed_id", unique: true
+  add_index "user_subscriptions", ["subscriber_id"], name: "index_user_subscriptions_on_subscriber_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "firstName"
     t.string   "lastName"
     t.string   "location"
-    t.integer  "industry"
+    t.string   "industry"
     t.integer  "numConnections"
     t.string   "position"
     t.string   "company"
     t.integer  "reportedCount"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.integer  "subscribingUser_id"
-  end
-
-  create_table "users_attending_event", id: false, force: :cascade do |t|
-    t.integer "event_id", null: false
-    t.integer "user_id",  null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
 end
