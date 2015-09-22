@@ -1,9 +1,16 @@
 class PostController < ApplicationController
+
+  def new
+    @post = Post.new
+  end
+
   def create
-	if params[:type].present? && params[:text].present? && params[:tags].present?
-      puts "Successful"
-    else
-    end
+      @post = Post.new(post_params)
+      if @post.save
+        puts "Successful"
+      else
+      # puts "Failure"
+      end
   end
 
   def comment
@@ -12,7 +19,9 @@ class PostController < ApplicationController
     else
     end
   end
-
+  def post_params
+    params.permit(:type,:tags,:text)
+  end
   def upvote
   end
 end
