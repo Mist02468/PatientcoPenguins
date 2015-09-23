@@ -1,5 +1,7 @@
 class PostController < ApplicationController
 
+	before_action :confirm_logged_in
+
   def new
     @post = Post.new
   end

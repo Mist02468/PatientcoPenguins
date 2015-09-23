@@ -1,4 +1,7 @@
 class SearchController < ApplicationController
+
+	before_action :confirm_logged_in
+	
   def searchByTag
   end
 

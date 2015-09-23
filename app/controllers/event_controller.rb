@@ -1,4 +1,7 @@
 class EventController < ApplicationController
+
+	before_action :confirm_logged_in
+	
   def create
 	if params[:time].present? && params[:topic].present?
       puts "Successful"

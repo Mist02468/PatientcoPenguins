@@ -1,9 +1,10 @@
 
 class AccessController < ApplicationController
-  def login
-  end
 
-  def logout
+	before_action :confirm_logged_in, :except => [:login, :startLinkedInAuth, :finishLinkedInAuth, :logout]
+	
+  def login
+	#login form
   end
 
   def startLinkedInAuth
@@ -15,7 +16,6 @@ class AccessController < ApplicationController
   end
 
   def finishLinkedInAuth
-    render nothing: true
     require 'oauth2'
 
     if params[:code].present? && params[:state].present?
@@ -26,11 +26,18 @@ class AccessController < ApplicationController
 
       response = token.get('https://api.linkedin.com/v1/people/~?format=json', :headers => { 'authorization' => 'Bearer ' + token.token })
       pp response.response.env['body']
+      
+      redirect_to(:controller => 'post', :action => 'create')
     elsif params[:error].present? && params[:error_description].present?
       puts "Rejected"
     else
       puts "Unexpected response"
     end
+  end
+  
+  def logout
+	session[:user_id] = nil
+    redirect_to(:action => "login")
   end
   
   private 
