@@ -25,7 +25,14 @@ class AccessController < ApplicationController
       token = client.auth_code.get_token(params[:code], :redirect_uri => 'http://localhost:3000/access/finishLinkedInAuth')
 
       response = token.get('https://api.linkedin.com/v1/people/~?format=json', :headers => { 'authorization' => 'Bearer ' + token.token })
-      pp response.response.env['body']
+      response = ActiveSupport::JSON.decode(response.response.env['body'])
+      
+      found_user = User.where(:linkedInId => response['id']).first
+      pp found_user
+      if found_user == nil
+		found_user = createNewUser(response)
+	  end
+	  session[:user_id] = found_user.id
       
       redirect_to(:controller => 'post', :action => 'create')
     elsif params[:error].present? && params[:error_description].present?
@@ -52,4 +59,21 @@ class AccessController < ApplicationController
 	return randStringOfNums
   end
   
+  def createNewUser(linkedInInfo)
+	print "Make sure here"
+	user = User.new do |u|
+		u.firstName      = linkedInInfo['firstName']
+		u.lastName       = linkedInInfo['lastName']
+		u.location       = nil
+		u.industry       = nil
+		u.numConnections = nil
+		u.position       = linkedInInfo['headline']
+		u.company        = nil
+		u.reportedCount  = 0
+		u.linkedInId     = linkedInInfo['id']
+	end
+	user.save
+	return user
+  end
+	
 end
