@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
 
   def confirm_logged_in
 	#when developing, just make the first line of this method 'return true' so you don't have to keep logging in
+	return true #till I get sessions set up
     unless session[:user_id]
       redirect_to(:controller => 'access', :action => 'login')
       return false #halts the before_action
