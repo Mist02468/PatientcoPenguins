@@ -15,7 +15,8 @@ class PostController < ApplicationController
       end
   end
 
-  def comment
+  def view
+	puts "testing"
 	if params[:text].present?
       puts "Successful"
     else

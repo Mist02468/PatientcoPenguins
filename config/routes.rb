@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get 'post/create'
   get 'post/comment'
   get 'post/upvote'
+  get 'post/view'
 
   get 'search/searchByTag'
   get 'search/searchByText'
@@ -17,12 +18,12 @@ Rails.application.routes.draw do
   get 'event/invite'
 
   get 'access/login'
-  get 'access/logout' 
+  get 'access/logout'
   get 'access/finishLinkedInAuth'
 
   get 'home_feed/index'
   get 'home_feed/subscribe'
-  
+
   #helper methods, to remove from this list after development
   get 'access/startLinkedInAuth'
   get 'event/createGoogleDoc'
