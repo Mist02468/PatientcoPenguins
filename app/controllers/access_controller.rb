@@ -12,7 +12,7 @@ class AccessController < ApplicationController
 
     client = OAuth2::Client.new('75yetg1f8atx89', 'le39CGDc1yQLCo9U', :site => 'https://www.linkedin.com/', :authorize_url => '/uas/oauth2/authorization')
 
-	redirect_to client.auth_code.authorize_url(:redirect_uri => 'http://localhost:3000/access/finishLinkedInAuth') + '&state=' + getRandomState #might want to apply for '&scope=r_fullprofile' and more
+	redirect_to client.auth_code.authorize_url(:redirect_uri => 'http://localhost:3000/access/finishLinkedInAuth') + '&state=' + getRandomState + '&scope=r_basicprofile%20r_emailaddress'
   end
 
   def finishLinkedInAuth
@@ -24,13 +24,15 @@ class AccessController < ApplicationController
       client = OAuth2::Client.new('75yetg1f8atx89', 'le39CGDc1yQLCo9U', :site => 'https://www.linkedin.com/', :token_url => '/uas/oauth2/accessToken')
       token = client.auth_code.get_token(params[:code], :redirect_uri => 'http://localhost:3000/access/finishLinkedInAuth')
 
-      response = token.get('https://api.linkedin.com/v1/people/~?format=json', :headers => { 'authorization' => 'Bearer ' + token.token })
+      response = token.get('https://api.linkedin.com/v1/people/~:(first-name,last-name,location,industry,num-connections,positions,email-address,id)?format=json', :headers => { 'authorization' => 'Bearer ' + token.token })
       response = ActiveSupport::JSON.decode(response.response.env['body'])
+      #pp response
       
       found_user = User.where(:linkedInId => response['id']).first
-      pp found_user
       if found_user == nil
 		found_user = createNewUser(response)
+	  else
+		found_user = updateUser(response, found_user)
 	  end
 	  session[:user_id] = found_user.id
       
@@ -64,16 +66,29 @@ class AccessController < ApplicationController
 	user = User.new do |u|
 		u.firstName      = linkedInInfo['firstName']
 		u.lastName       = linkedInInfo['lastName']
-		u.location       = nil
-		u.industry       = nil
-		u.numConnections = nil
-		u.position       = linkedInInfo['headline']
-		u.company        = nil
+		u.location       = linkedInInfo['location']['name']
+		u.industry       = linkedInInfo['industry']
+		u.numConnections = linkedInInfo['numConnections']
+		u.position       = linkedInInfo['positions']['values'][0]['title']
+		u.company        = linkedInInfo['positions']['values'][0]['company']['name']
 		u.reportedCount  = 0
 		u.linkedInId     = linkedInInfo['id']
+		u.emailAddress   = linkedInInfo['emailAddress']
 	end
 	user.save
 	return user
   end
-	
+  
+  def updateUser(linkedInInfo, user)
+	user.update_attributes(:firstName      => linkedInInfo['firstName'],
+	                       :lastName       => linkedInInfo['lastName'],
+						   :location       => linkedInInfo['location']['name'],
+						   :industry       => linkedInInfo['industry'],
+						   :numConnections => linkedInInfo['numConnections'],
+						   :position       => linkedInInfo['positions']['values'][0]['title'],
+						   :company        => linkedInInfo['positions']['values'][0]['company']['name'],
+						   :emailAddress   => linkedInInfo['emailAddress'])
+	user.save
+	return user
+  end
 end
