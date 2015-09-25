@@ -17,6 +17,7 @@
 <%= form_tag(:action => "create") do %>
 
   <p>
+    <% @post.text = "" %>
     <%= hidden_field_tag(:originatingPost_id, @post.id) %>
     <%= hidden_field_tag(:kind, 2) %>
     <%= label_tag("Write Comment") %><br />
