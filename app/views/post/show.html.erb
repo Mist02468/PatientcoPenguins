@@ -1,16 +1,28 @@
+
+<p> Post: <%= @post.text %></p>
+<p> Time: <%= @post.created_at %></p>
+<p> User: <%= @post.user.firstName %> <%= @post.user.lastName %></p>
+
+<table>
+  <% @comments.each do |c| %>
+    <tr>
+      <td><%= c.text %></td>
+      <td><%= c.created_at %></td>
+      <td><%= c.user.firstName %> <%= c.user.lastName %></td>
+    </tr>
+  <% end %>
+</table>
 <h1>New comment</h1>
 
-<%= form_tag("../post/create", method: "get") do %>
+<%= form_tag(:action => "create") do %>
 
   <p>
-    <%= label_tag("Name") %><br />
-    <%= text_area_tag(:text, "", style: "resize:None") %><br>
-  </p>
-  <p>
+    <%= hidden_field_tag(:originatingPost_id, @post.id) %>
+    <%= hidden_field_tag(:kind, 2) %>
     <%= label_tag("Write Comment") %><br />
-    <%= text_area_tag(:text, "", size: "24x6", style:"resize:None") %>
+    <%= text_area(:post,:text, size: "24x6", style:"resize:None") %>
   </p>
   <p>
-    <%= submit_tag("Comment", action:"update") %>
+    <%= submit_tag("Comment") %>
   </p>
 <% end %>
