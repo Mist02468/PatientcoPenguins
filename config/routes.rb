@@ -4,7 +4,13 @@ Rails.application.routes.draw do
   get 'profile/message'
   get 'profile/subscribe'
 
+  get 'post/new'
+  post 'post/new'
+  get 'post/show'
+
   get 'post/create'
+  post 'post/create'
+
   get 'post/comment'
   get 'post/upvote'
   get 'post/view'

@@ -1,8 +1,8 @@
-<%= form_tag("../post/create", method:"get") do %>
-	<%= hidden_field_tag(:type , ":share") %>
-	<%= text_area_tag(:text, "", size: "24x6", style:"resize:None") %><br>
-	<%= text_field_tag(:tags) %><br>
-	<%= submit_tag("Post", action:"update") %>
+<%= form_for @post  do |f| %>
+	<!--<%= hidden_field_tag(:kind , 0) %>-->
+	<!--<%= f.text_area(:text, size: "24x6", style:"resize:None") %><br>-->
+	<%= f.text_field :tags %><br>
+	<%= f.submit %>
 <% end %>
 
 
