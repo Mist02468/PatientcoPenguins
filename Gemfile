@@ -51,5 +51,8 @@ group :development, :test do
   # Generates ERD diagrams
   gem "rails-erd"
   gem "ruby-graphviz"
+
+  gem "sunspot_rails"
+  gem "sunspot_solr"
 end
 
