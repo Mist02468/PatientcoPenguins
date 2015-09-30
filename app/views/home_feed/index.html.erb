@@ -1,3 +1,6 @@
 <h1>HomeFeed#index</h1>
-<p>Find me in app/views/home_feed/index.html.erb</p>
-<p>HELLO WORLD!</p>
+<%= form_tag(:action => 'create') do %>
+	<%= text_area(:post, :text, size: "24x6", style:"resize:None") %><br>
+	<!--<%= text_field(:post, :tags) %>-->
+	<%= submit_tag("Post") %>
+<% end %>

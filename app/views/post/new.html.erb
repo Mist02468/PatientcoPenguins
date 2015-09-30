@@ -1,7 +1,6 @@
 <%= form_tag(:action => 'create') do %>
-	<%= text_area(:post, :text, size: "24x6", style:"resize:None") %><br>
-	<!--<%= text_field(:post, :tags) %>-->
-	<%= submit_tag("Post") %>
+	<%= text_field(:post, :kind) %><br>
+	<%= submit_tag("Search") %>
 <% end %>
 
 
