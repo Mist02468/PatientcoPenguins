@@ -1,0 +1,5 @@
+<%= form_tag(:action => 'create') do %>
+	<%= select_datetime(DateTime.current, :prefix => :datetime) %>
+	<%= text_area(:event, :topic) %><br>
+	<%= submit_tag("Create Event") %>
+<% end %>

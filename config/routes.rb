@@ -19,9 +19,9 @@ Rails.application.routes.draw do
   get 'search/searchByText'
   get 'search/searchByUser'
 
-  get 'event/create'
-  get 'event/join'
-  get 'event/invite'
+  get 'event/new'
+  post 'event/create'
+  get 'event/show'
 
   get 'access/login'
   get 'access/logout'

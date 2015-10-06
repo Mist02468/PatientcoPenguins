@@ -2,11 +2,24 @@ class EventController < ApplicationController
 
 	before_action :confirm_logged_in
 	
+  def new
+    @event = Event.new
+  end
+  
   def create
-	if params[:time].present? && params[:topic].present?
-      puts "Successful"
+	@event = Event.new(event_params)
+	@event.startTime = DateTime.civil(params[:datetime][:year].to_i, params[:datetime][:month].to_i, params[:datetime][:day].to_i, params[:datetime][:hour].to_i, params[:datetime][:minute].to_i)
+	@event.host = User.find(session[:user_id])
+	if @event.save!
+      redirect_to action: "show", :id => @event.id
     else
+      redirect_to action: 'new'
     end
+  end
+  
+  def show
+    puts "Event Saved in the DB!"
+    @event = Event.find(params[:id])
   end
 
   def join
@@ -52,5 +65,10 @@ class EventController < ApplicationController
   end
   
   def createGoogleHangoutOnAir
+  end
+  
+  private
+  def event_params
+    params.require(:event).permit(:topic)
   end
 end
