@@ -62,33 +62,63 @@ class AccessController < ApplicationController
   end
 
   def createNewUser(linkedInInfo)
-	print "Make sure here"
 	user = User.new do |u|
-		u.firstName      = linkedInInfo['firstName']
-		u.lastName       = linkedInInfo['lastName']
-		u.location       = linkedInInfo['location']['name']
-		u.industry       = linkedInInfo['industry']
-		u.numConnections = linkedInInfo['numConnections']
-		u.position       = linkedInInfo['positions']['values'][0]['title']
-		u.company        = linkedInInfo['positions']['values'][0]['company']['name']
+		u.firstName      = getValueFromLinkedInInfo(linkedInInfo, 'firstName')
+		u.lastName       = getValueFromLinkedInInfo(linkedInInfo, 'lastName')
+		u.location       = getValueFromLinkedInInfo(linkedInInfo, 'location')
+		u.industry       = getValueFromLinkedInInfo(linkedInInfo, 'industry')
+		u.numConnections = getValueFromLinkedInInfo(linkedInInfo, 'numConnections')
+		u.position       = getValueFromLinkedInInfo(linkedInInfo, 'title')
+		u.company        = getValueFromLinkedInInfo(linkedInInfo, 'company')
 		u.reportedCount  = 0
-		u.linkedInId     = linkedInInfo['id']
-		u.emailAddress   = linkedInInfo['emailAddress']
+		u.linkedInId     = getValueFromLinkedInInfo(linkedInInfo, 'id')
+		u.emailAddress   = getValueFromLinkedInInfo(linkedInInfo, 'emailAddress')
 	end
 	user.save
 	return user
   end
 
   def updateUser(linkedInInfo, user)
-	user.update_attributes(:firstName      => linkedInInfo['firstName'],
-	                       :lastName       => linkedInInfo['lastName'],
-						   :location       => linkedInInfo['location']['name'],
-						   :industry       => linkedInInfo['industry'],
-						   :numConnections => linkedInInfo['numConnections'],
-						   :position       => linkedInInfo['positions']['values'][0]['title'],
-						   :company        => linkedInInfo['positions']['values'][0]['company']['name'],
-						   :emailAddress   => linkedInInfo['emailAddress'])
+	user.update_attributes(:firstName      => getValueFromLinkedInInfo(linkedInInfo, 'firstName'),
+	                       :lastName       => getValueFromLinkedInInfo(linkedInInfo, 'lastName'),
+						   :location       => getValueFromLinkedInInfo(linkedInInfo, 'location'),
+						   :industry       => getValueFromLinkedInInfo(linkedInInfo, 'industry'),
+						   :numConnections => getValueFromLinkedInInfo(linkedInInfo, 'numConnections'),
+						   :position       => getValueFromLinkedInInfo(linkedInInfo, 'title'),
+						   :company        => getValueFromLinkedInInfo(linkedInInfo, 'company'),
+						   :emailAddress   => getValueFromLinkedInInfo(linkedInInfo, 'emailAddress'))
 	user.save
 	return user
+  end
+  
+  def getValueFromLinkedInInfo(linkedInInfo, key)
+	if key == 'title' or key == 'company'
+		if linkedInInfo.has_key? 'positions'
+			if linkedInInfo['positions'].has_key? 'values'
+				if key == 'title'
+					if linkedInInfo['positions']['values'][0].has_key? 'title'
+						return linkedInInfo['positions']['values'][0]['title']
+					end
+				elsif key == 'company'
+					if linkedInInfo['positions']['values'][0].has_key? 'company'
+						if linkedInInfo['positions']['values'][0]['company'].has_key? 'name'
+							return linkedInInfo['positions']['values'][0]['company']['name']
+						end
+					end
+				end
+			end
+		end
+	elsif key == 'location'
+		if linkedInInfo.has_key? 'location'
+			if linkedInInfo['location'].has_key? 'name'
+				return linkedInInfo['location']['name']
+			end
+		end
+	else
+		if linkedInInfo.has_key? key
+			return linkedInInfo[key]
+		end
+	end
+	return ''
   end
 end
