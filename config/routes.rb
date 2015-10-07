@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   get 'event/new'
   post 'event/create'
   get 'event/show'
+  post 'event/addTag'
 
   get 'access/login'
   get 'access/logout'

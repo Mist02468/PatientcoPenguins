@@ -1,5 +1,20 @@
 <%= form_tag(:action => 'create') do %>
-	<%= select_datetime(DateTime.current, :prefix => :datetime) %>
+	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
+	<%= select_datetime(DateTime.current, :prefix => :datetime) %><br>
 	<%= text_area(:event, :topic) %><br>
 	<%= submit_tag("Create Event") %>
+<% end %>
+
+<table>
+  <% @tagsToAdd.each do |t| %>
+    <tr>
+      <td><%= t %></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= form_tag(:action => 'addTag') do %>
+	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
+	<%= text_area(:tag, :name) %><br>
+	<%= submit_tag("Add Tag to Event") %>
 <% end %>

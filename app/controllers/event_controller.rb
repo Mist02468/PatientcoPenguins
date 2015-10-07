@@ -1,15 +1,21 @@
 class EventController < ApplicationController
 
 	before_action :confirm_logged_in
-	
+  
   def new
     @event = Event.new
+    @tagsToAdd = []
   end
   
   def create
 	@event = Event.new(event_params)
 	@event.startTime = DateTime.civil(params[:datetime][:year].to_i, params[:datetime][:month].to_i, params[:datetime][:day].to_i, params[:datetime][:hour].to_i, params[:datetime][:minute].to_i)
 	@event.host = User.find(session[:user_id])
+	
+	@tagsToAdd = params[:tagsToAdd].split(" ")
+	@tagsToAdd.each do |t|
+		@event.tags << createTag(t)
+	end
 	if @event.save!
       redirect_to action: "show", :id => @event.id
     else
@@ -20,6 +26,13 @@ class EventController < ApplicationController
   def show
     puts "Event Saved in the DB!"
     @event = Event.find(params[:id])
+  end
+  
+  def addTag
+	@tagsToAdd = params[:tagsToAdd].split(" ")
+	@tagsToAdd << tag_params['name']
+	puts @tagsToAdd
+	render "new"
   end
 
   def join
@@ -70,5 +83,20 @@ class EventController < ApplicationController
   private
   def event_params
     params.require(:event).permit(:topic)
+  end
+  def tag_params
+	params.require(:tag).permit(:name)
+  end
+  
+  def createTag(tagName)
+	found_tag = Tag.where(:name => tagName).first
+	if found_tag == nil
+		tag = Tag.new()
+		tag.name = tagName
+		tag.save
+	else
+		tag = found_tag
+	end
+	return tag
   end
 end
