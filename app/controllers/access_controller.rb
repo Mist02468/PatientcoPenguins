@@ -2,7 +2,7 @@
 class AccessController < ApplicationController
 
 	before_action :confirm_logged_in, :except => [:login, :startLinkedInAuth, :finishLinkedInAuth, :logout]
-	
+
   def login
 	#login form
   end
@@ -27,7 +27,7 @@ class AccessController < ApplicationController
       response = token.get('https://api.linkedin.com/v1/people/~:(first-name,last-name,location,industry,num-connections,positions,email-address,id)?format=json', :headers => { 'authorization' => 'Bearer ' + token.token })
       response = ActiveSupport::JSON.decode(response.response.env['body'])
       #pp response
-      
+
       found_user = User.where(:linkedInId => response['id']).first
       if found_user == nil
 		found_user = createNewUser(response)
@@ -35,7 +35,7 @@ class AccessController < ApplicationController
 		found_user = updateUser(response, found_user)
 	  end
 	  session[:user_id] = found_user.id
-      
+
       redirect_to(:controller => 'post', :action => 'new')
     elsif params[:error].present? && params[:error_description].present?
       puts "Rejected"
@@ -43,24 +43,24 @@ class AccessController < ApplicationController
       puts "Unexpected response"
     end
   end
-  
+
   def logout
 	session[:user_id] = nil
     redirect_to(:action => "login")
   end
-  
-  private 
-  
+
+  private
+
   def getRandomState
 	prng = Random.new()
-	
+
 	randStringOfNums = ''
 	for i in 0..20
 		randStringOfNums += prng.rand(0..9).to_s
 	end
 	return randStringOfNums
   end
-  
+
   def createNewUser(linkedInInfo)
 	print "Make sure here"
 	user = User.new do |u|
@@ -78,7 +78,7 @@ class AccessController < ApplicationController
 	user.save
 	return user
   end
-  
+
   def updateUser(linkedInInfo, user)
 	user.update_attributes(:firstName      => linkedInInfo['firstName'],
 	                       :lastName       => linkedInInfo['lastName'],

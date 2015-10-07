@@ -3,10 +3,12 @@ Rails.application.routes.draw do
   get 'profile/report'
   get 'profile/message'
   get 'profile/subscribe'
+  get 'profile/show'
 
   get 'post/new'
   post 'post/new'
   get 'post/show'
+  get 'post/goToProfile'
 
   get 'post/create'
   post 'post/create'

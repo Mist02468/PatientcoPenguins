@@ -1,7 +1,8 @@
 
 <p> Post: <%= @post.text %></p>
 <p> Time: <%= @post.created_at %></p>
-<p> User: <%= @post.user.firstName %> <%= @post.user.lastName %></p>
+<p> User:<%= link_to 'profile',
+   controller: "profile", action: 'show', user_id: @post.user.id%></p>
 
 <table>
   <% @comments.each do |c| %>
