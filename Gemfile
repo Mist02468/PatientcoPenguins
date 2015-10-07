@@ -52,7 +52,14 @@ group :development, :test do
   gem "rails-erd"
   gem "ruby-graphviz"
 
+  # Solar indexing/searching
   gem "sunspot_rails"
   gem "sunspot_solr"
+
+  # Selenium testing
+  gem 'rspec-rails'
+  gem 'capybara'
+  gem 'database_cleaner'
+  gem 'selenium-webdriver'
 end
 
