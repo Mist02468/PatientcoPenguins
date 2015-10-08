@@ -16,6 +16,7 @@ class EventController < ApplicationController
 	@tagsToAdd.each do |t|
 		@event.tags << createTag(t)
 	end
+	@event.doc_link = createGoogleDoc()
 	if @event.save!
       redirect_to action: "show", :id => @event.id
     else
@@ -46,7 +47,6 @@ class EventController < ApplicationController
   end
   
   def createGoogleDoc
-	render nothing: true
 	require 'google/api_client'
 	
 	serviceAccount_email = '54678097976-94j19m7hap7c8k0jkii8gol8bg2hltco@developer.gserviceaccount.com'
@@ -69,7 +69,7 @@ class EventController < ApplicationController
              
     if result.status == 200
 		puts 'Successful'
-		pp result
+		return JSON.parse(result.response.env['body'])['id']
 		#pp JSON.parse(client.execute(:api_method => service.files.list).env['body'])
 		#pp client.execute(:api_method => service.files.list)
     else
