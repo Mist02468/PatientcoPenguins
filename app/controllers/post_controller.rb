@@ -1,7 +1,10 @@
 class PostController < ApplicationController
 
 	before_action :confirm_logged_in
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
   def index
     @posts = Post.find(:all)
   end
@@ -19,7 +22,7 @@ class PostController < ApplicationController
       isComment = true
     else
       @post.kind = 0
-    end
+  	end
     @post.user = User.find(session[:user_id])
     if @post.save!
       if isComment
