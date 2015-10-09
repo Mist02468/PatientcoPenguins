@@ -9,7 +9,7 @@ class HomeFeedController < ApplicationController
 
   def search
     Post.search do
-      fulltext       
+      fulltext params[:kind]
     end
   end
   

@@ -2,11 +2,6 @@ class PostController < ApplicationController
 
 	before_action :confirm_logged_in
 
-  searchable do 
-    text :kind 
-  end
-    
-  end
   def index
     @posts = Post.find(:all)
   end
