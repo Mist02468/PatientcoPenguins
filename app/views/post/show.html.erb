@@ -1,7 +1,8 @@
+<%= stylesheet_link_tag('application') %>
 
 <p> Post: <%= @post.text %></p>
 <p> Time: <%= @post.created_at %></p>
-<p> User:<%= link_to 'profile',
+<p> User: <%= link_to "#{@post.user.firstName} #{@post.user.lastName}",
    controller: "profile", action: 'show', user_id: @post.user.id%></p>
 
 <table>

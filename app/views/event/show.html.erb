@@ -1,7 +1,8 @@
+<%= stylesheet_link_tag('application') %>
 <p> Event Topic: <%= @event.topic %></p>
 <p> Event Time: <%= @event.startTime %></p>
 <p> Event Host: <%= @event.host.firstName %> <%= @event.host.lastName %></p>
-<p> Event Tags: 
+<p> Event Tags:
 <table>
   <% @event.tags.each do |t| %>
     <tr>

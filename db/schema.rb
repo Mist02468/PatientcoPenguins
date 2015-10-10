@@ -11,14 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151006130953) do
+ActiveRecord::Schema.define(version: 20151008023846) do
 
   create_table "events", force: :cascade do |t|
     t.string   "topic"
     t.datetime "startTime"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.integer  "host_id"
+    t.string   "doc_link"
+    t.string   "hangout_link"
   end
 
   add_index "events", ["host_id"], name: "index_events_on_host_id"
