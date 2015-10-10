@@ -121,8 +121,5 @@ class AccessController < ApplicationController
 	end
 	return ''
   end
-<<<<<<< HEAD
 end
-=======
-end
->>>>>>> 904ba26b8beb66ffc46c8dabe99d3ec9a9927144
+

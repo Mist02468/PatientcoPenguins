@@ -1,10 +1,6 @@
 class PostController < ApplicationController
 
 	before_action :confirm_logged_in
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
   def index
     @posts = Post.find(:all)
   end
