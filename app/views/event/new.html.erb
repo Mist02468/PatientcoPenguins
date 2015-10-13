@@ -1,4 +1,3 @@
-<%= stylesheet_link_tag('application') %>
 <%= form_tag(:action => 'create') do %>
 	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
 	<%= select_datetime(DateTime.current, :prefix => :datetime) %><br>
