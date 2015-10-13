@@ -17,6 +17,7 @@ class EventController < ApplicationController
 		@event.tags << createTag(t)
 	end
 	@event.doc_link = createGoogleDoc()
+	#createGoogleHangoutOnAir(@event)
 	if @event.save!
       redirect_to action: "show", :id => @event.id
     else
@@ -77,7 +78,30 @@ class EventController < ApplicationController
 	end
   end
   
-  def createGoogleHangoutOnAir
+  def createGoogleHangoutOnAir(event)
+	require 'mechanize'
+	
+	agent = Mechanize.new
+	loginEmailPage = agent.get('https://accounts.google.com/ServiceLogin?passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26feature%3Dredirect_login%26next%3D%252Fmy_live_events%253Faction_create_live_event%253D1%26hl%3Den&service=youtube&uilel=3&hl=en')
+	loginEmailForm = loginEmailPage.forms.first
+	#loginEmailForm.fields.each { |f| puts f.name }
+	loginEmailForm['Email'] = 'gtcscapstone@gmail.com'
+	#puts loginEmailForm['Email']
+	loginPasswordPage = loginEmailForm.submit
+	loginPasswordForm = loginPasswordPage.forms.first
+	loginPasswordForm['Passwd'] = 'NEED TO PUT THE PASSWORD HERE'
+	createLiveEventPage = loginPasswordForm.submit
+	puts 'RIGHT HERE'
+	createLiveEventForm = createLiveEventPage.form_with(:name => 'mdeform')
+	createLiveEventForm.add_field!('action_create_video', '1')
+	createLiveEventForm['title'] = event.topic
+	#createLiveEventForm['scheduled_start_date'] = 'Oct 14, 2015'
+	#createLiveEventForm['scheduled_start_date'] = event.startTime. createLiveEventForm['scheduled_start_time_hour'] = event.startTime. createLiveEventForm['scheduled_start_time_minute'] = event.startTime.
+	createLiveEventForm['privacy'] = 'unlisted' 
+	createdLiveEventPage = createLiveEventForm.submit
+	puts createdLiveEventPage.uri.to_s
+	puts createdLiveEventPage.body
+
   end
   
   private
