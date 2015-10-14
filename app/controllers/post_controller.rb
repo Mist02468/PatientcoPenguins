@@ -7,6 +7,7 @@ class PostController < ApplicationController
 
   def new
     @post = Post.new
+    @tagsToAdd = []
   end
 
   def create
@@ -18,6 +19,10 @@ class PostController < ApplicationController
       isComment = true
     else
       @post.kind = 0
+      @tagsToAdd = params[:tagsToAdd].split(" ")
+	  @tagsToAdd.each do |t|
+		@post.tags << createTag(t)
+	  end
   	end
     @post.user = User.find(session[:user_id])
     if @post.save!
@@ -36,9 +41,31 @@ class PostController < ApplicationController
     @post = Post.find(params[:id])
     @comments = Post.where(:originatingPost_id => params[:id])
   end
+  
+  def addTag
+	@tagsToAdd = params[:tagsToAdd].split(" ")
+	@tagsToAdd << tag_params['name']
+	puts @tagsToAdd
+	render "new"
+  end
 
   private
   def post_params
     params.require(:post).permit(:text)
+  end
+  def tag_params
+	params.require(:tag).permit(:name)
+  end
+  
+  def createTag(tagName)
+	found_tag = Tag.where(:name => tagName).first
+	if found_tag == nil
+		tag = Tag.new()
+		tag.name = tagName
+		tag.save
+	else
+		tag = found_tag
+	end
+	return tag
   end
 end
