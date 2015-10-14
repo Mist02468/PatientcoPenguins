@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get 'post/create'
   post 'post/create'
   post 'post/addTag'
+  get 'post/addTag'
 
   get 'post/comment'
   get 'post/upvote'
