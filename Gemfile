@@ -41,6 +41,12 @@ gem 'google-api-client'
 # For creating Google Hangout On Air
 gem 'nokogiri'
 gem 'mechanize'
+gem 'selenium-webdriver'
+gem 'headless'
+gem 'watir-webdriver'
+
+# For Windows
+gem 'tzinfo-data'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -64,6 +70,5 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'capybara'
   gem 'database_cleaner'
-  gem 'selenium-webdriver'
 end
 
