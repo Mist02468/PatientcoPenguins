@@ -44,6 +44,7 @@ gem 'mechanize'
 gem 'selenium-webdriver'
 gem 'headless'
 gem 'watir-webdriver'
+gem 'poltergeist'
 
 # For Windows
 gem 'tzinfo-data'
