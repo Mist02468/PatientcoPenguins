@@ -2,6 +2,15 @@
 <p> Time: <%= @post.created_at %></p>
 <p> User: <%= link_to "#{@post.user.firstName} #{@post.user.lastName}",
    controller: "profile", action: 'show', user_id: @post.user.id%></p>
+<p> Tags:
+<table>
+  <% @post.tags.each do |t| %>
+    <tr>
+      <td><%= t.name %></td>
+    </tr>
+  <% end %>
+</table>
+</p>
 
 <table>
   <% @comments.each do |c| %>

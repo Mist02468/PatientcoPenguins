@@ -45,7 +45,6 @@ class PostController < ApplicationController
   def addTag
 	@tagsToAdd = params[:tagsToAdd].split(" ")
 	@tagsToAdd << tag_params['name']
-	puts @tagsToAdd
 	render "new"
   end
 
