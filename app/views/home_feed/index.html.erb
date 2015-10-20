@@ -1,6 +1,11 @@
 <h1>Home</h1>
-<%= form_tag(:action => 'search') do %>
-	<%= text_area(:post, :text, size: "24x6", style:"resize:None") %><br>
-	<!--<%= text_field(:post, :tags) %>-->
-	<%= submit_tag("Post") %>
-<% end %>
+
+<table>
+	<% @posts.each do |post|%>
+	    <tr>
+	      <td><%= post.text %></td>
+	      <td><%= post.created_at %></td>
+	      <td><%= post.user.firstName %> <%= post.user.lastName %></td>
+	    </tr>
+	<% end %>
+</table>
