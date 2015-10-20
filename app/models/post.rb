@@ -1,7 +1,4 @@
 class Post < ActiveRecord::Base
-	searchable do 
-    	text :kind 
-  	end
 	enum kind: [ :share, :question, :comment ]
 	belongs_to :user
 	has_and_belongs_to_many :tags
