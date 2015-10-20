@@ -5,8 +5,9 @@ class HomeFeedController < ApplicationController
   layout false
 	
   def index
+    @posts = Post.all
   end
-  
+
   def subscribe
 	if params[:tag].present?
       puts "Successful"
