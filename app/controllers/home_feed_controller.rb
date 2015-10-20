@@ -6,12 +6,6 @@ class HomeFeedController < ApplicationController
 	
   def index
   end
-
-  def search
-    Post.search do
-      fulltext params[:kind]
-    end
-  end
   
   def subscribe
 	if params[:tag].present?
