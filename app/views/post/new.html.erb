@@ -1,3 +1,4 @@
+<%= stylesheet_link_tag('post.scss') %>
 <%= form_tag(:action => 'create') do %>
 	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
 	<%= text_field(:post, :text) %><br>

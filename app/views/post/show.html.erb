@@ -1,7 +1,10 @@
+<%= stylesheet_link_tag('post.scss') %>
 <p> Post: <%= @post.text %></p>
-<p> Time: <%= @post.created_at %></p>
-<p> User: <%= link_to "#{@post.user.firstName} #{@post.user.lastName}",
+<h3> Time: <%= @post.created_at %></h3>
+<div id= "user">
+  <p> User: <%= link_to "#{@post.user.firstName} #{@post.user.lastName}",
    controller: "profile", action: 'show', user_id: @post.user.id%></p>
+ </div>
 <p> Tags:
 <table>
   <% @post.tags.each do |t| %>
@@ -21,7 +24,7 @@
     </tr>
   <% end %>
 </table>
-<h1>New comment</h1>
+<h2>New comment</h2>
 
 <%= form_tag(:action => "create") do %>
 
