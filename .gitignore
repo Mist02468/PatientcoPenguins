@@ -78,3 +78,5 @@ pickle-email-*.html
 # Environment files that may contain sensitive data
 .env
 .powenv
+
+config/Capstone Project-1c7361b30ae2.p12
