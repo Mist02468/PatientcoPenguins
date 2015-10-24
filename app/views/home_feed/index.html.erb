@@ -1,11 +1,16 @@
+<%= stylesheet_link_tag('home_feed.scss') %>
+
+
 <h1>Home</h1>
 
 <table>
 	<% @posts.each do |post|%>
-	    <tr>
-	      <td><%= post.text %></td>
-	      <td><%= post.created_at %></td>
-	      <td><%= post.user.firstName %> <%= post.user.lastName %></td>
-	    </tr>
+		<div class = "highlight_row">
+		    <tr>
+		    	<td><%= post.text %></td>
+		    	<td><%= post.created_at %></td>
+		    	<td><%= link_to "#{post.user.firstName} #{post.user.lastName}", controller: "profile", action: 'show', user_id: post.user.id%></td>
+		    </tr>
+		</div>
 	<% end %>
 </table>
