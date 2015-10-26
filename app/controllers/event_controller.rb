@@ -16,8 +16,8 @@ class EventController < ApplicationController
 	@tagsToAdd.each do |t|
 		@event.tags << createTag(t)
 	end
-	#@event.doc_link = createGoogleDoc()
-	createGoogleHangoutOnAir(@event)
+	@event.doc_link = createGoogleDoc()
+	@event.hangout_link = createGoogleHangoutOnAir(@event)
 	if @event.save!
       redirect_to action: "show", :id => @event.id
     else
@@ -92,23 +92,16 @@ class EventController < ApplicationController
     session.click_button('signIn')
 
     session.fill_in('title', :with => event.topic)
-    #session.find(:xpath, '//input[@class="time-range-hidden-scheduled-start-date"]', :visible => false).set('2015-10-27')
-    #session.find(:xpath, '//input[@name="scheduled_start_date"]').set('2015-10-27')
-    #session.execute_script('document.getElementsByName("scheduled_start_date")[0].value = "2015-10-29"');
-    #session.find(:xpath, '//input[@class="yt-uix-form-input-text time-range-date time-range-compact"]').set('2015-10-27')
-    session.execute_script('document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].removeAttribute("readonly"); document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].value = "Oct 27, 2015";')
-    session.find(:xpath, '//input[@class="yt-uix-form-input-text"]').set('4:30 PM')
-    #session.fill_in('//input[@class="yt-uix-form-input-text time-range-date time-range-compact"]', :with => 'Oct 27, 2015')
-    #session.fill_in('//input[@class="yt-uix-form-input-text"]', :with => '12:30 AM')
-    #session.fill_in('scheduled_start_date', :with => '2015-10-16')
-    #session.fill_in('scheduled_start_time_hour', :with => '18')
-    #session.fill_in('scheduled_start_time_minute', :with => '0')
-    session.save_screenshot('here1.png', :full => true)
+    script = 'document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].removeAttribute("readonly"); document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].value = "' + event.startTime.strftime("%b %e, %Y") + '";'
+    session.execute_script(script)
+    session.find(:xpath, '//input[@class="yt-uix-form-input-text"]').set(event.startTime.strftime("%l:%M %p"))
     session.select('Unlisted', :from => 'privacy')
     session.first(:xpath, '//*[@class="save-cancel-buttons"]').click
-    session.save_screenshot('here2.png', :full => true)
-    #session.visit('https://www.youtube.com/my_live_events?filter=scheduled')
-    #session.click_on(event.topic)
+    sleep(4)
+    session.save_screenshot('here1.png', :full => true)
+    link = session.find_link(event.topic) #gives for example /watch?v=tuV0fqh5jgQ, will have to use as https://www.youtube.com/watch?v=tuV0fqh5jgQ and we'll only store tuV0fqh5jgQ 
+    address = link[:href].split('=')
+    return address[1]
   end
   
   private
