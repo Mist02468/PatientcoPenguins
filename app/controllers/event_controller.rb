@@ -33,7 +33,6 @@ class EventController < ApplicationController
   def addTag
 	@tagsToAdd = params[:tagsToAdd].split(" ")
 	@tagsToAdd << tag_params['name']
-	puts @tagsToAdd
 	render "new"
   end
 
@@ -97,10 +96,24 @@ class EventController < ApplicationController
     session.find(:xpath, '//input[@class="yt-uix-form-input-text"]').set(event.startTime.strftime("%l:%M %p"))
     session.select('Unlisted', :from => 'privacy')
     session.first(:xpath, '//*[@class="save-cancel-buttons"]').click
-    sleep(4)
-    session.save_screenshot('here1.png', :full => true)
-    link = session.find_link(event.topic) #gives for example /watch?v=tuV0fqh5jgQ, will have to use as https://www.youtube.com/watch?v=tuV0fqh5jgQ and we'll only store tuV0fqh5jgQ 
-    address = link[:href].split('=')
+    sleep(4) # let the next page load
+    #for debugging: session.save_screenshot('here1.png', :full => true)
+    
+    links = session.all('a', :text => event.topic)
+    if links.count() == 1
+        link = links.first()
+    else
+        numPrevSameTopicEvents = Event.where(topic: event.topic).where('startTime >= :today_date_time', {today_date_time: DateTime.new}).where('startTime < :new_event_date_time', {new_event_date_time: event.startTime}).count
+        j = 0
+        links.each do |l|
+            if j == numPrevSameTopicEvents
+                link = l
+                break
+            end
+            j += 1
+        end
+    end
+    address = link[:href].split('=') # gives for example /watch?v=tuV0fqh5jgQ, will have to use as https://www.youtube.com/watch?v=tuV0fqh5jgQ and we'll only store tuV0fqh5jgQ 
     return address[1]
   end
   

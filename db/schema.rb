@@ -11,16 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151008023846) do
+ActiveRecord::Schema.define(version: 20151027015840) do
 
   create_table "events", force: :cascade do |t|
-    t.string   "topic"
-    t.datetime "startTime"
+    t.string   "topic",        null: false
+    t.datetime "startTime",    null: false
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
-    t.integer  "host_id"
-    t.string   "doc_link"
-    t.string   "hangout_link"
+    t.integer  "host_id",      null: false
+    t.string   "doc_link",     null: false
+    t.string   "hangout_link", null: false
   end
 
   add_index "events", ["host_id"], name: "index_events_on_host_id"
@@ -36,12 +36,12 @@ ActiveRecord::Schema.define(version: 20151008023846) do
   end
 
   create_table "posts", force: :cascade do |t|
-    t.integer  "kind",               default: 0
-    t.text     "text"
-    t.integer  "voteCount",          default: 0
+    t.integer  "kind",               default: 0, null: false
+    t.text     "text",                           null: false
+    t.integer  "voteCount",          default: 0, null: false
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
-    t.integer  "user_id"
+    t.integer  "user_id",                        null: false
     t.integer  "originatingPost_id"
   end
 
@@ -53,7 +53,7 @@ ActiveRecord::Schema.define(version: 20151008023846) do
   end
 
   create_table "tags", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
   end
 
   create_table "tags_users", id: false, force: :cascade do |t|
