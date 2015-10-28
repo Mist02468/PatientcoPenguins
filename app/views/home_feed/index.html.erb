@@ -4,7 +4,7 @@
 <h1>Home</h1>
 
 <table>
-	<% @posts.each do |post|%>
+	<% @posts.order("voteCount DESC").order("created_at DESC").each do |post|%>
 		<div class = "highlight_row">
 		    <tr>
 		    	<td><%= post.text %></td>
