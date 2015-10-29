@@ -15,21 +15,22 @@ padding:20px;
 </style>
 </head>
 <body>
-<p class="a">
-<font size="6" color=#32CD32> <%= @user.firstName %> </font>
-<br></br>
-<font size="6" color=#32CD32> <%= @user.lastName %> </font>
-<br></br>
-<font size="3"> <%= @user.location %> </font>
-<br></br>
-<font size="3"> <%= @user.emailAddress %> </font>
-<br></br>
-<font size="3"> <%= @user.industry %> </font>
-<br></br>
-<font size="3"> <%= @user.company %> </font>
-<br></br>
-<font size="3"> <%= @user.position %> </font>
-<br></br>
-<font size="3"> <%= link_to "Back to Home","../home_feed/index" %> </font>
-
+	<p class="a">
+		<font size="6" color=#32CD32> <%= @user.firstName %> </font>
+		<br></br>
+		<font size="6" color=#32CD32> <%= @user.lastName %> </font>
+		<br></br>
+		<font size="3"> <%= @user.location %> </font>
+		<br></br>
+		<font size="3"> <%= @user.emailAddress %> </font>
+		<br></br>
+		<font size="3"> <%= @user.industry %> </font>
+		<br></br>
+		<font size="3"> <%= @user.company %> </font>
+		<br></br>
+		<font size="3"> <%= @user.position %> </font>
+	<div class = "homelink">
+		<br></br>
+		<font size="3"> <%= link_to "Back to Home","../home_feed/index" %> </font>
+	</div>
 </body>

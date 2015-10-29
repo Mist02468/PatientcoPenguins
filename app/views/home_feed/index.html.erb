@@ -2,10 +2,9 @@
 
 
 <h1>Home</h1>
-
-<%= link_to "Post","../post/new" %>
-<%= link_to "Profile", controller: "profile", action: 'show', user_id: session[:user_id] %>
-<%= link_to "Event","../event/new" %>
+<%= link_to "View Profile", controller: "profile", action: 'show', user_id: session[:user_id] %>
+<%= link_to "Create Post","../post/new" %>
+<%= link_to "Create Event","../event/new" %>
 <table>
 	<% @posts.where("kind = 0").order("voteCount DESC").order("created_at DESC").each do |post|%>
 		<div class = "highlight_row">
