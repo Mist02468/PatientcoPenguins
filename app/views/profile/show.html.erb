@@ -29,6 +29,20 @@ padding:20px;
 		<font size="3"> <%= @user.company %> </font>
 		<br></br>
 		<font size="3"> <%= @user.position %> </font>
+	<div class = "posts">
+		<table>
+			<% @posts.where("this.user_id = #{session[:user_id]}").order("voteCount DESC").order("created_at DESC").each do |post|%>
+				<div class = "highlight_row">
+				    <tr>
+				    	<td><%= link_to "#{post.text}", controller: "post", action: "show", id: post.id %></td>
+				    	<td><%= post.created_at %></td>
+				    	<td><%= link_to "#{post.user.firstName} #{post.user.lastName}", controller: "profile", action: 'show', user_id: post.user.id%></td>
+				    </tr>
+				</div>
+			<% end %>
+		</table>
+	</div>
+
 	<div class = "homelink">
 		<br></br>
 		<font size="3"> <%= link_to "Back to Home","../home_feed/index" %> </font>
