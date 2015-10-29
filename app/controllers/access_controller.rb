@@ -36,7 +36,7 @@ class AccessController < ApplicationController
 	  end
 	  session[:user_id] = found_user.id
 
-      redirect_to(:controller => 'post', :action => 'new')
+      redirect_to(:controller => 'home_feed', :action => 'index')
     elsif params[:error].present? && params[:error_description].present?
       puts "Rejected"
     else

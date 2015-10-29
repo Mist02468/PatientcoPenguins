@@ -3,11 +3,14 @@
 
 <h1>Home</h1>
 
+<%= link_to "Post","../post/new" %>
+<%= link_to "Profile", controller: "profile", action: 'show', user_id: session[:user_id] %>
+<%= link_to "Event","../event/new" %>
 <table>
-	<% @posts.order("voteCount DESC").order("created_at DESC").each do |post|%>
+	<% @posts.where("kind = 0").order("voteCount DESC").order("created_at DESC").each do |post|%>
 		<div class = "highlight_row">
 		    <tr>
-		    	<td><%= post.text %></td>
+		    	<td><%= link_to "#{post.text}", controller: "post", action: "show", id: post.id %></td>
 		    	<td><%= post.created_at %></td>
 		    	<td><%= link_to "#{post.user.firstName} #{post.user.lastName}", controller: "profile", action: 'show', user_id: post.user.id%></td>
 		    </tr>
