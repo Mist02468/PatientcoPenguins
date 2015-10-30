@@ -42,6 +42,26 @@ hr {
     border-style: inset;
     border-width: 3px;
 }
+a:link {
+  color: green;
+}
+.button_submit {
+  border-style: solid;
+  border-width: medium;
+  border-color: green;
+  border-radius: 5px;
+  color: white;
+  background: green;
+  font-size: 13px;
+  float: right;
+}
+.button {
+  border-style: solid;
+  border-width: thin;
+  border-radius: 5px;
+  background: white;
+  font-size: 12px;
+}
 #login {
     position: relative;
     transform: translateY(50%);

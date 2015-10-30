@@ -1,22 +1,23 @@
 <%= stylesheet_link_tag('post.scss') %>
-<%= form_tag(:action => 'create') do %>
-	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
-	<%= text_field(:post, :text) %><br>
-	<%= submit_tag("Post") %>
-<% end %>
 
-<table>
-  <% @tagsToAdd.each do |t| %>
-    <tr>
-      <td><%= t %></td>
-    </tr>
-  <% end %>
-</table>
+<div class="postDiv">
+	<h2> Create a Post</h2>
+	<ul>
+		<% @tagsToAdd.each do |t| %>
+				<li class="tag"><%= t %></li>
+		<% end %>
+	</ul>
+	<%= form_tag(:action => 'addTag') do %>
+		<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
+		<%= text_field(:tag, :name, :placeholder => "tag me!") %>
+		<%= submit_tag("Add Tag to Post", :class => "button") %>
+	<% end %>
+	<%= link_to "Back to Home","../home_feed/index" %>
+</br>
+	<%= form_tag(:action => 'create') do %>
+		<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
+		<%= text_area(:post, :text, :class => "text_field", :placeholder => "write post here") %><br>
+		<%= submit_tag("Post", :class => "button_submit") %>
+	<% end %>
 
-<%= form_tag(:action => 'addTag') do %>
-	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
-	<%= text_area(:tag, :name) %><br>
-	<%= submit_tag("Add Tag to Post") %>
-<% end %>
-
-<%= link_to "Back to Home","../home_feed/index" %>
+</div>

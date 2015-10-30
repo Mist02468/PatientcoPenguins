@@ -1,43 +1,41 @@
 <%= stylesheet_link_tag('post.scss') %>
-<p> Post: <%= @post.text %></p>
-<h3> Time: <%= @post.created_at %></h3>
-<div id= "user">
-  <p> User: <%= link_to "#{@post.user.firstName} #{@post.user.lastName}",
-   controller: "profile", action: 'show', user_id: @post.user.id%></p>
- </div>
-<p> Tags:
-<table>
-  <% @post.tags.each do |t| %>
-    <tr>
-      <td><%= t.name %></td>
-    </tr>
+<div class="postDiv">
+  <p> <%= link_to "#{@post.user.firstName} #{@post.user.lastName}",
+   controller: "profile", action: 'show', user_id: @post.user.id, :class => "link"%> said:</p>
+  <p class="post"><%= @post.text %></p>
+  <h3> at <%= @post.created_at %></h3>
+  <ul>
+    <% @post.tags.each do |t| %>
+      <li class="tag"><%= t.name %></li>
+    <% end %>
+  </ul>
+</div>
+</br>
+<div class="postDiv">
+  <table>
+    <% @comments.each do |c| %>
+      <tr>
+        <td><%= c.text %></td>
+        <td> - <%= link_to "#{@post.user.firstName} #{@post.user.lastName}",
+         controller: "profile", action: 'show', user_id: @post.user.id, :class => "link"%></td>
+         <td><h3> at <%= c.created_at %></h3></td>
+      </tr>
+    <% end %>
+  </table>
+  </br>
+  <h2>New comment</h2>
+
+  <%= form_tag(:action => "create") do %>
+
+    <p>
+      <% @post.text = "" %>
+      <%= hidden_field_tag(:originatingPost_id, @post.id) %>
+      <%= hidden_field_tag(:kind, 2) %>
+      <%= text_area(:post,:text, style:"resize:None", :class => "small_text_field", :placeholder => "write comment here") %>
+    </p>
+    <p>
+      <%= submit_tag("Comment", :class => "button_submit") %>
+    </p>
+    <%= link_to "Back to Home","../home_feed/index" %>
   <% end %>
-</table>
-</p>
-
-<table>
-  <% @comments.each do |c| %>
-    <tr>
-      <td><%= c.text %></td>
-      <td><%= c.created_at %></td>
-      <td><%= c.user.firstName %> <%= c.user.lastName %></td>
-    </tr>
-  <% end %>
-</table>
-<h2>New comment</h2>
-
-<%= form_tag(:action => "create") do %>
-
-  <p>
-    <% @post.text = "" %>
-    <%= hidden_field_tag(:originatingPost_id, @post.id) %>
-    <%= hidden_field_tag(:kind, 2) %>
-    <%= label_tag("Write Comment") %><br />
-    <%= text_area(:post,:text, size: "24x6", style:"resize:None") %>
-  </p>
-  <p>
-    <%= submit_tag("Comment") %>
-  </p>
-<%= link_to "Back to Home","../home_feed/index" %>
-
-<% end %>
+</div>
