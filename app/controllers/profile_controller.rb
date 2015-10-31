@@ -15,5 +15,7 @@ class ProfileController < ApplicationController
 		if params[:user_id].present?
 			@user = User.find(params[:user_id])
 		end
+
+    @posts = Post.all
   end
 end
