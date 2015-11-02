@@ -52,7 +52,7 @@ class EventController < ApplicationController
 	serviceAccount_email = '54678097976-94j19m7hap7c8k0jkii8gol8bg2hltco@developer.gserviceaccount.com'
 	serviceAccount_PKCS12_filePath = Rails.root.join('config', 'Capstone Project-1c7361b30ae2.p12')
 	
-	key = Google::APIClient::PKCS12.load_key(serviceAccount_PKCS12_filePath, 'notasecret')
+	key = Google::APIClient::PKCS12.load_key(serviceAccount_PKCS12_filePath, get_secret('GoogleKeyPassword'))
     asserter = Google::APIClient::JWTAsserter.new(serviceAccount_email, 'https://www.googleapis.com/auth/drive', key)
     client = Google::APIClient.new()
     client.authorization = asserter.authorize()
@@ -87,8 +87,9 @@ class EventController < ApplicationController
     session.fill_in('Email', :with => 'gtcscapstone@gmail.com')
     session.click_button('next')
     
-    session.fill_in('Passwd', :with => 'mu5EcRaPha')
+    session.fill_in('Passwd', :with => get_secret('GoogleAccountPassword'))
     session.click_button('signIn')
+    session.save_screenshot('here1.png', :full => true)
 
     session.fill_in('title', :with => event.topic)
     script = 'document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].removeAttribute("readonly"); document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].value = "' + event.startTime.strftime("%b %e, %Y") + '";'

@@ -1,5 +1,6 @@
 require "json"
 require "selenium-webdriver"
+require_relative "../testCommonFunctions.rb"
 include RSpec::Expectations
 
 describe "LoginLogoutSpec" do
@@ -18,13 +19,7 @@ describe "LoginLogoutSpec" do
   end
   
   it "test_login_logout_spec" do
-    @driver.get(@base_url + "access/login")
-    @driver.find_element(:css, "img[alt=\"Sign in 8b25c2de2af5f6c13c47d836fb64dfd43fbf9e587c70b15180e565848703760a\"]").click
-    @driver.find_element(:id, "session_key-oauth2SAuthorizeForm").clear
-    @driver.find_element(:id, "session_key-oauth2SAuthorizeForm").send_keys "gtcscapstone@gmail.com"
-    @driver.find_element(:id, "session_password-oauth2SAuthorizeForm").clear
-    @driver.find_element(:id, "session_password-oauth2SAuthorizeForm").send_keys "foUrtesting"
-    @driver.find_element(:name, "authorize").click
+    @driver = TestCommonFunctions.login(@base_url, @driver)
     
     verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }
     verify { (@driver.find_element(:id, "RevenueCycle").text).should == "Revenue Cycle" }

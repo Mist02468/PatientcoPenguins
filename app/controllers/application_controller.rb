@@ -14,4 +14,10 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def get_secret(nameOfSecret)
+    secretsFile = Rails.root.join('config', 'accountSecrets.yml')
+    secrets = YAML.load_file(secretsFile)
+    return secrets[nameOfSecret]
+  end
+  
 end
