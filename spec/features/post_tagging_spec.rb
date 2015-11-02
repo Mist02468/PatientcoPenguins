@@ -23,10 +23,15 @@ describe "PostTagging" do
     
     @driver.find_element(:link, "Create Post").click
     
+    @driver.find_element(:id, "post_text").clear
+    @driver.find_element(:id, "post_text").send_keys "test post"
+    
     @driver.find_element(:id, "tag_name").clear
     @driver.find_element(:id, "tag_name").send_keys "testTag1"
     @driver.find_element(:name, "commit").click
     verify { (@driver.find_element(:css, "li.tag").text).should == "testTag1" }
+    
+    verify { (@driver.find_element(:id, "post_text").text).should == "test post" }
     
     @driver.find_element(:id, "tag_name").clear
     @driver.find_element(:id, "tag_name").send_keys "testTag2"
@@ -34,8 +39,8 @@ describe "PostTagging" do
     verify { (@driver.find_element(:css, "li.tag").text).should == "testTag1" }
     verify { (@driver.find_element(:xpath, "//li[2]").text).should == "testTag2" }
     
-    @driver.find_element(:id, "post_text").clear
-    @driver.find_element(:id, "post_text").send_keys "test post"
+    verify { (@driver.find_element(:id, "post_text").text).should == "test post" }
+    
     @driver.find_element(:xpath, "(//input[@name='commit'])[2]").click
     
     verify { (@driver.find_element(:css, "p.post").text).should == "test post" }
