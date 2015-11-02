@@ -1,7 +1,7 @@
 <%= form_tag(:action => 'create') do %>
 	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
 	<%= select_datetime(DateTime.current, :prefix => :datetime) %><br>
-	<%= text_area(:event, :topic) %><br>
+	<%= text_area(:event, :topic, :onchange => 'document.getElementById("save-currentEventTopic").value = this.value') %><br>
 	<%= submit_tag("Create Event") %>
 <% end %>
 
@@ -14,6 +14,7 @@
 </table>
 
 <%= form_tag(:action => 'addTag') do %>
+    <%= hidden_field_tag(:currentEventTopic, @event.topic, :id => 'save-currentEventTopic') %>
 	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
 	<%= text_area(:tag, :name) %><br>
 	<%= submit_tag("Add Tag to Event") %>

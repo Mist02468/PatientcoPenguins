@@ -31,6 +31,8 @@ class EventController < ApplicationController
   end
   
   def addTag
+    @event = Event.new
+    @event.topic = params[:currentEventTopic]
 	@tagsToAdd = params[:tagsToAdd].split(" ")
 	@tagsToAdd << tag_params['name']
 	render "new"
