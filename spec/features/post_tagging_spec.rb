@@ -1,5 +1,6 @@
 require "json"
 require "selenium-webdriver"
+require_relative "../testCommonFunctions.rb"
 include RSpec::Expectations
 
 describe "PostTagging" do
@@ -18,32 +19,28 @@ describe "PostTagging" do
   end
   
   it "test_post_tagging" do
-    @driver.get(@base_url + "access/login")
-    @driver.find_element(:css, "img[alt=\"Sign in 8b25c2de2af5f6c13c47d836fb64dfd43fbf9e587c70b15180e565848703760a\"]").click
-    @driver.find_element(:id, "session_key-oauth2SAuthorizeForm").clear
-    @driver.find_element(:id, "session_key-oauth2SAuthorizeForm").send_keys "gtcscapstone@gmail.com"
-    @driver.find_element(:id, "session_password-oauth2SAuthorizeForm").clear
-    @driver.find_element(:id, "session_password-oauth2SAuthorizeForm").send_keys "foUrtesting"
-    @driver.find_element(:name, "authorize").click
+    @driver = TestCommonFunctions.login(@base_url, @driver)
+    
+    @driver.find_element(:link, "Create Post").click
     
     @driver.find_element(:id, "tag_name").clear
     @driver.find_element(:id, "tag_name").send_keys "testTag1"
-    @driver.find_element(:xpath, "(//input[@name='commit'])[2]").click
-    verify { (@driver.find_element(:css, "td").text).should == "testTag1" }
+    @driver.find_element(:name, "commit").click
+    verify { (@driver.find_element(:css, "li.tag").text).should == "testTag1" }
     
     @driver.find_element(:id, "tag_name").clear
     @driver.find_element(:id, "tag_name").send_keys "testTag2"
-    @driver.find_element(:xpath, "(//input[@name='commit'])[2]").click
-    verify { (@driver.find_element(:css, "td").text).should == "testTag1" }
-    verify { (@driver.find_element(:xpath, "//tr[2]/td").text).should == "testTag2" }
+    @driver.find_element(:name, "commit").click
+    verify { (@driver.find_element(:css, "li.tag").text).should == "testTag1" }
+    verify { (@driver.find_element(:xpath, "//li[2]").text).should == "testTag2" }
     
     @driver.find_element(:id, "post_text").clear
     @driver.find_element(:id, "post_text").send_keys "test post"
-    @driver.find_element(:name, "commit").click
+    @driver.find_element(:xpath, "(//input[@name='commit'])[2]").click
     
-    verify { (@driver.find_element(:css, "p").text).should == "Post: test post" }
-    verify { (@driver.find_element(:css, "td").text).should == "testTag1" }
-    verify { (@driver.find_element(:xpath, "//tr[2]/td").text).should == "testTag2" }
+    verify { (@driver.find_element(:css, "p.post").text).should == "test post" }
+    verify { (@driver.find_element(:css, "li.tag").text).should == "testTag1" }
+    verify { (@driver.find_element(:xpath, "//li[2]").text).should == "testTag2" }
   end
   
   def element_present?(how, what)

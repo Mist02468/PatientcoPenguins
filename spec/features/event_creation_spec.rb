@@ -1,5 +1,6 @@
 require "json"
 require "selenium-webdriver"
+require_relative "../testCommonFunctions.rb"
 include RSpec::Expectations
 
 describe "EventCreationSpec" do
@@ -18,15 +19,10 @@ describe "EventCreationSpec" do
   end
   
   it "test_event_creation_spec" do
-    @driver.get(@base_url + "/access/login")
-    @driver.find_element(:css, "img[alt=\"Sign in 8b25c2de2af5f6c13c47d836fb64dfd43fbf9e587c70b15180e565848703760a\"]").click
-    @driver.find_element(:id, "session_key-oauth2SAuthorizeForm").clear
-    @driver.find_element(:id, "session_key-oauth2SAuthorizeForm").send_keys "gtcscapstone@gmail.com"
-    @driver.find_element(:id, "session_password-oauth2SAuthorizeForm").clear
-    @driver.find_element(:id, "session_password-oauth2SAuthorizeForm").send_keys "foUrtesting"
-    @driver.find_element(:name, "authorize").click
+    @driver = TestCommonFunctions.login(@base_url, @driver)
     
-    @driver.get(@base_url + "/event/new")
+    @driver.find_element(:link, "Create Event").click
+    
     uniqueTopicName = DateTime.new
     @driver.find_element(:id, "event_topic").clear
     @driver.find_element(:id, "event_topic").send_keys "Test Event " + uniqueTopicName.to_s
@@ -35,6 +31,7 @@ describe "EventCreationSpec" do
     Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, "datetime_hour")).select_by(:text, "07")
     Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, "datetime_minute")).select_by(:text, "35")
     @driver.find_element(:name, "commit").click
+    
     verify { (@driver.find_element(:css, "p").text).should == "Event Topic: " + "Test Event " + uniqueTopicName.to_s }
     verify { (@driver.find_element(:xpath, "//p[2]").text).should == "Event Time: 2015-12-25 07:35:00 UTC" }
     verify { (@driver.find_element(:xpath, "//p[3]").text).should == "Event Host: GT Capstone" }

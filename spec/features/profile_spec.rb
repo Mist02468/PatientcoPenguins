@@ -1,5 +1,6 @@
 require "json"
 require "selenium-webdriver"
+require_relative "../testCommonFunctions.rb"
 include RSpec::Expectations
 
 describe "ProfileSpec" do
@@ -18,19 +19,10 @@ describe "ProfileSpec" do
   end
   
   it "test_profile_spec" do
-    @driver.get(@base_url + "/access/login")
-    @driver.find_element(:css, "img[alt=\"Sign in 8b25c2de2af5f6c13c47d836fb64dfd43fbf9e587c70b15180e565848703760a\"]").click
-    @driver.find_element(:id, "session_key-oauth2SAuthorizeForm").clear
-    @driver.find_element(:id, "session_key-oauth2SAuthorizeForm").send_keys "gtcscapstone@gmail.com"
-    @driver.find_element(:id, "session_password-oauth2SAuthorizeForm").clear
-    @driver.find_element(:id, "session_password-oauth2SAuthorizeForm").send_keys "foUrtesting"
-    @driver.find_element(:name, "authorize").click
+    @driver = TestCommonFunctions.login(@base_url, @driver)
     
-    @driver.find_element(:id, "post_text").clear
-    @driver.find_element(:id, "post_text").send_keys "test post"
-    @driver.find_element(:name, "commit").click
+    @driver.find_element(:link, "View Profile").click
     
-    @driver.find_element(:link, "GT Capstone").click
     verify { (@driver.find_element(:css, "font").text).should == "GT" }
     verify { (@driver.find_element(:xpath, "//font[2]").text).should == "Capstone" }
     verify { (@driver.find_element(:xpath, "//font[3]").text).should == "Greater Atlanta Area" }
