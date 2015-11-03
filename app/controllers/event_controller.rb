@@ -34,7 +34,9 @@ class EventController < ApplicationController
     @event = Event.new
     @event.topic = params[:currentEventTopic]
 	@tagsToAdd = params[:tagsToAdd].split(" ")
-	@tagsToAdd << tag_params['name']
+    if (@tagsToAdd.include? tag_params['name']) == false
+        @tagsToAdd << tag_params['name']
+    end
 	render "new"
   end
 
@@ -91,7 +93,7 @@ class EventController < ApplicationController
     
     session.fill_in('Passwd', :with => get_secret('GoogleAccountPassword'))
     session.click_button('signIn')
-    session.save_screenshot('here1.png', :full => true)
+    #session.save_screenshot('here1.png', :full => true)
 
     session.fill_in('title', :with => event.topic)
     script = 'document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].removeAttribute("readonly"); document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].value = "' + event.startTime.strftime("%b %e, %Y") + '";'

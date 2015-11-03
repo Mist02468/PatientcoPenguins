@@ -1,8 +1,9 @@
-<%= form_tag(:action => 'create') do %>
+<%= form_tag({:action => 'create'}, {:id => 'eventForm'}) do %>
 	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
 	<%= select_datetime(DateTime.current, :prefix => :datetime) %><br>
 	<%= text_area(:event, :topic, :onchange => 'document.getElementById("save-currentEventTopic").value = this.value') %><br>
 	<%= submit_tag("Create Event") %>
+    <div id="eventError"></div>
 <% end %>
 
 <table>
@@ -13,12 +14,55 @@
   <% end %>
 </table>
 
-<%= form_tag(:action => 'addTag') do %>
+<%= form_tag({:action => 'addTag'}, {:id => 'tagForm'}) do %>
     <%= hidden_field_tag(:currentEventTopic, @event.topic, :id => 'save-currentEventTopic') %>
 	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
 	<%= text_area(:tag, :name) %><br>
 	<%= submit_tag("Add Tag to Event") %>
+    <div id="tagError"></div>
 <% end %>
 
 <%= link_to "Back to Home","../home_feed/index" %>
+
+<script>
+$(document).ready(function () {
+
+    $.validator.addMethod('tagHasNoSpaces', function (value) { 
+        return /^[^ ]*$/.test(value); 
+    }, 'Please enter a tag without spaces');
+
+    $("#tagForm").validate({
+            onkeyup: false,
+            onclick: false,
+            onfocusout: false,
+            errorElement:'div',
+            errorLabelContainer: '#tagError',
+            rules: {
+                "tag[name]": {required: true, tagHasNoSpaces: true}
+            },
+            messages: {
+                "tag[name]": {
+                    required: 'Please enter a tag' 
+                }
+            }
+    })
+    
+    $("#eventForm").validate({
+            onkeyup: false,
+            onclick: false,
+            onfocusout: false,
+            errorElement:'div',
+            errorLabelContainer: '#eventError',
+            rules: {
+                "event[topic]": {required: true}
+            },
+            messages: {
+                "event[topic]": {
+                    required: 'Please enter an event topic' 
+                }
+            }
+    })
+ 
+});
+</script>
 

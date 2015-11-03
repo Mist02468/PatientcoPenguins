@@ -25,17 +25,40 @@
   </br>
   <h2>New comment</h2>
 
-  <%= form_tag(:action => "create") do %>
+  <%= form_tag({:action => "create"}, {:id => "commentForm"}) do %>
 
-    <p>
+    <div>
       <% @post.text = "" %>
       <%= hidden_field_tag(:originatingPost_id, @post.id) %>
       <%= hidden_field_tag(:kind, 2) %>
       <%= text_area(:post,:text, style:"resize:None", :class => "small_text_field", :placeholder => "write comment here") %>
-    </p>
+      <span id="commentError"></span>
+    </div>
     <p>
       <%= submit_tag("Comment", :class => "button_submit") %>
     </p>
     <%= link_to "Back to Home","../home_feed/index" %>
   <% end %>
 </div>
+
+<script>
+$(document).ready(function () {
+    
+    $("#commentForm").validate({
+            onkeyup: false,
+            onclick: false,
+            onfocusout: false,
+            errorElement:'div',
+            errorLabelContainer: '#commentError',
+            rules: {
+                "post[text]": {required: true}
+            },
+            messages: {
+                "post[text]": {
+                    required: 'Please enter a comment' 
+                }
+            }
+    })
+ 
+});
+</script>

@@ -15,10 +15,11 @@
 		<% end %>
 	</ul>
 </br>
-	<%= form_tag(:action => 'create') do %>
+	<%= form_tag({:action => 'create'}, {:id => 'postForm'}) do %>
 		<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
 		<%= text_area(:post, :text, :class => "text_field", :placeholder => "write post here", :onchange => 'document.getElementById("save-currentPostText").value = this.value') %><br>
 		<%= submit_tag("Post", :class => "button_submit") %>
+        <div id="postError"></div>
 	<% end %>
 	<%= link_to "Back to Home","../home_feed/index", :html => {:class => 'link'}%>
 </div>
@@ -42,6 +43,22 @@ $(document).ready(function () {
             messages: {
                 "tag[name]": {
                     required: 'Please enter a tag' 
+                }
+            }
+    })
+    
+    $("#postForm").validate({
+            onkeyup: false,
+            onclick: false,
+            onfocusout: false,
+            errorElement:'div',
+            errorLabelContainer: '#postError',
+            rules: {
+                "post[text]": {required: true}
+            },
+            messages: {
+                "post[text]": {
+                    required: 'Please enter a post' 
                 }
             }
     })
