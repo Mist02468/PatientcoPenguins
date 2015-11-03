@@ -26,6 +26,21 @@ describe "PostTagging" do
     @driver.find_element(:id, "post_text").clear
     @driver.find_element(:id, "post_text").send_keys "test post"
     
+    @driver.find_element(:name, "commit").click
+    verify { (@driver.find_element(:id, "tag_name-error").text).should == "Please enter a tag" }
+    
+    @driver.find_element(:id, "tag_name").clear
+    @driver.find_element(:id, "tag_name").send_keys "tag tag"
+    @driver.find_element(:name, "commit").click
+    verify { (@driver.find_element(:id, "tag_name-error").text).should == "Please enter a tag without spaces" }
+    
+    @driver.find_element(:id, "tag_name").clear
+    @driver.find_element(:id, "tag_name").send_keys "testTag1"
+    @driver.find_element(:name, "commit").click
+    verify { (@driver.find_element(:css, "li.tag").text).should == "testTag1" }
+    
+    verify { (@driver.find_element(:id, "post_text").text).should == "test post" }
+    
     @driver.find_element(:id, "tag_name").clear
     @driver.find_element(:id, "tag_name").send_keys "testTag1"
     @driver.find_element(:name, "commit").click
