@@ -46,7 +46,9 @@ class PostController < ApplicationController
     @post = Post.new
     @post.text = params[:currentPostText]
 	@tagsToAdd = params[:tagsToAdd].split(" ")
-	@tagsToAdd << tag_params['name']
+    if (@tagsToAdd.include? tag_params['name']) == false
+        @tagsToAdd << tag_params['name']
+    end
 	render "new"
   end
 
