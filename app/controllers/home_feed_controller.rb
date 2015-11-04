@@ -1,10 +1,7 @@
 class HomeFeedController < ApplicationController
 
 	before_action :confirm_logged_in
-
-  layout false
-	
-  def index
+  def show
     @posts = Post.all
   end
 

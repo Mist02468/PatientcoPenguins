@@ -32,7 +32,7 @@ Rails.application.routes.draw do
   get 'access/logout'
   get 'access/finishLinkedInAuth'
 
-  get 'home_feed/index'
+  get 'home_feed/show'
   get 'home_feed/subscribe'
 
   #helper methods, to remove from this list after development

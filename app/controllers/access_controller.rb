@@ -36,7 +36,7 @@ class AccessController < ApplicationController
 	  end
 	  session[:user_id] = found_user.id
 
-      redirect_to(:controller => 'home_feed', :action => 'index')
+      redirect_to(:controller => 'home_feed', :action => 'show')
     elsif params[:error].present? && params[:error_description].present?
       puts "Rejected"
     else
@@ -90,7 +90,7 @@ class AccessController < ApplicationController
 	user.save
 	return user
   end
-  
+
   def getValueFromLinkedInInfo(linkedInInfo, key)
 	if key == 'title' or key == 'company'
 		if linkedInInfo.has_key? 'positions'
@@ -122,4 +122,3 @@ class AccessController < ApplicationController
 	return ''
   end
 end
-

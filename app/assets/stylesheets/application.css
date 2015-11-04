@@ -18,20 +18,23 @@
   height: 46px;
   position:relative;
 }
+#LogoContainer {
+    width:360px;
+    height:100%;
+}
+
 #Pronnect {
   font-family: sans-serif;
   font-size: 45px;
   color: green;
-  position:absolute;
-  bottom:0;
+  float:left;
 }
 #RevenueCycle {
   font-family: sans-serif;
   font-size: 25px;
   color: green;
-  position:absolute;
-  bottom:4px;
-  left:180px;
+  float:right;
+  padding-top: 18px;
 }
 hr {
     display: block;
@@ -59,7 +62,9 @@ a {
   border-style: solid;
   border-width: thin;
   border-radius: 5px;
-  background: white;
+  border-color: green;
+  background: green;
+  color: white;
   font-size: 12px;
 }
 #login {

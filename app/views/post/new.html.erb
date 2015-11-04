@@ -21,14 +21,13 @@
 		<%= submit_tag("Post", :class => "button_submit") %>
         <div id="postError"></div>
 	<% end %>
-	<%= link_to "Back to Home","../home_feed/index", :html => {:class => 'link'}%>
 </div>
 
 <script>
 $(document).ready(function () {
 
-    $.validator.addMethod('tagHasNoSpaces', function (value) { 
-        return /^[^ ]*$/.test(value); 
+    $.validator.addMethod('tagHasNoSpaces', function (value) {
+        return /^[^ ]*$/.test(value);
     }, 'Please enter a tag without spaces');
 
     $("#tagForm").validate({
@@ -42,11 +41,11 @@ $(document).ready(function () {
             },
             messages: {
                 "tag[name]": {
-                    required: 'Please enter a tag' 
+                    required: 'Please enter a tag'
                 }
             }
     })
-    
+
     $("#postForm").validate({
             onkeyup: false,
             onclick: false,
@@ -58,13 +57,10 @@ $(document).ready(function () {
             },
             messages: {
                 "post[text]": {
-                    required: 'Please enter a post' 
+                    required: 'Please enter a post'
                 }
             }
     })
- 
+
 });
 </script>
-
-
-

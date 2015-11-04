@@ -37,13 +37,12 @@
     <p>
       <%= submit_tag("Comment", :class => "button_submit") %>
     </p>
-    <%= link_to "Back to Home","../home_feed/index" %>
   <% end %>
 </div>
 
 <script>
 $(document).ready(function () {
-    
+
     $("#commentForm").validate({
             onkeyup: false,
             onclick: false,
@@ -55,10 +54,10 @@ $(document).ready(function () {
             },
             messages: {
                 "post[text]": {
-                    required: 'Please enter a comment' 
+                    required: 'Please enter a comment'
                 }
             }
     })
- 
+
 });
 </script>
