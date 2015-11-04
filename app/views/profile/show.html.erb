@@ -12,39 +12,45 @@ height:310px;
 width:225px;
 padding:20px;
 }
+.postDiv {
+  margin:auto;
+  max-width: 700px;
+}
 </style>
 </head>
 <body>
-	<p class="a">
-		<font size="6" color=#32CD32> <%= @user.firstName %> </font>
-		<br></br>
-		<font size="6" color=#32CD32> <%= @user.lastName %> </font>
-		<br></br>
-		<font size="3"> <%= @user.location %> </font>
-		<br></br>
-		<font size="3"> <%= @user.emailAddress %> </font>
-		<br></br>
-		<font size="3"> <%= @user.industry %> </font>
-		<br></br>
-		<font size="3"> <%= @user.company %> </font>
-		<br></br>
-		<font size="3"> <%= @user.position %> </font>
-	<div class = "posts">
-		<table>
-			<% @posts.where("user_id = #{session[:user_id]}").order("voteCount DESC").order("created_at DESC").each do |post|%>
-				<div class = "highlight_row">
-				    <tr>
-				    	<td><%= link_to "#{post.text}", controller: "post", action: "show", id: post.id %></td>
-				    	<td><%= post.created_at %></td>
-				    	<td><%= link_to "#{post.user.firstName} #{post.user.lastName}", controller: "profile", action: 'show', user_id: post.user.id%></td>
-				    </tr>
-				</div>
-			<% end %>
-		</table>
-	</div>
-
-	<div class = "homelink">
-		<br></br>
-		<font size="3"> <%= link_to "Back to Home","../home_feed/index" %> </font>
+	<div class="postDiv">
+		<div width="50%" style="float:left;">
+			<p class="a">
+				<font size="6" color=#32CD32> <%= @user.firstName %> </font>
+				<br></br>
+				<font size="6" color=#32CD32> <%= @user.lastName %> </font>
+				<br></br>
+				<font size="3"> <%= @user.location %> </font>
+				<br></br>
+				<font size="3"> <%= @user.emailAddress %> </font>
+				<br></br>
+				<font size="3"> <%= @user.industry %> </font>
+				<br></br>
+				<font size="3"> <%= @user.company %> </font>
+				<br></br>
+				<font size="3"> <%= @user.position %> </font>
+			</p>
+		</div>
+		<div width="50%" style="float:right;">
+			<div class="posts">
+				<table>
+					<% @posts.where("user_id = #{session[:user_id]}").where("kind = 0").order("voteCount DESC").order("created_at DESC").each do |post|%>
+						<div class = "highlight_row">
+						    <tr>
+						    	<td><%= link_to "#{post.text}", controller: "post", action: "show", id: post.id %></td>
+						    	<td><%= post.created_at %></td>
+						    	<td><%= link_to "#{post.user.firstName} #{post.user.lastName}", controller: "profile", action: 'show', user_id: post.user.id%></td>
+						    </tr>
+						</div>
+					<% end %>
+				</table>
+			</div>
+		</div>
 	</div>
 </body>
