@@ -16,7 +16,7 @@
     <% @comments.each do |c| %>
       <tr>
         <td><%= c.text %></td>
-        <td> - <%= link_to "#{@post.user.firstName} #{@post.user.lastName}",
+        <td> - <%= link_to "#{@c.user.firstName} #{@c.user.lastName}",
          controller: "profile", action: 'show', user_id: @post.user.id, :class => "link"%></td>
          <td><h3> at <%= c.created_at %></h3></td>
       </tr>
