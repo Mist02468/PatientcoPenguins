@@ -44,7 +44,7 @@ padding:20px;
 						<div class = "highlight_row">
 						    <tr>
 						    	<td><%= link_to "#{post.text}", controller: "post", action: "show", id: post.id %></td>
-						    	<td><%= post.created_at %></td>
+						    	<td><%= post.created_at.in_time_zone("Eastern Time (US & Canada)").strftime("Posted on %m/%d/%Y at %I:%M%p") %></td>
 						    	<td><%= link_to "#{post.user.firstName} #{post.user.lastName}", controller: "profile", action: 'show', user_id: post.user.id%></td>
 						    </tr>
 						</div>
