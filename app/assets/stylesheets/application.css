@@ -53,7 +53,7 @@
   font-size: 20px;
 }
 hr {
-    display: block;
+    clear:both;
     margin-top: 5px;
     margin-bottom: 5px;
     margin-left: auto;
