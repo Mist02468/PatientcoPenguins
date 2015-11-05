@@ -21,8 +21,13 @@
 #LogoContainer {
     width:360px;
     height:100%;
+    float: left;
 }
-
+#sessionContainer {
+  width: 300px;
+  height:100%;
+  float: right;
+}
 #Pronnect {
   font-family: sans-serif;
   font-size: 45px;
@@ -35,6 +40,17 @@
   color: green;
   float:right;
   padding-top: 18px;
+}
+#User {
+  float: left;
+  font-family: sans-serif;
+  font-size: 20px;
+}
+#Logout {
+  padding-top: 22px;
+  float: right;
+  font-family: sans-serif;
+  font-size: 20px;
 }
 hr {
     display: block;

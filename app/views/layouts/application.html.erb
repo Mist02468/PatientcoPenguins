@@ -7,14 +7,19 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-  <%= link_to '../home_feed/show' do %>
   <div id="Header">
+    <%= link_to '../home_feed/show' do %>
     <div id="LogoContainer">
       <div id="Pronnect">Pronnect</div>
       <div id="RevenueCycle"> Revenue Cycle</div>
     </div>
+    <% end %>
+    <div id="sessionContainer">
+      <%= link_to '../access/logout' do %>
+      <div id="Logout"> Logout? </div>
+      <% end %>
+    </div>
   </div>
-  <% end %>
   <hr/>
 <%= yield %>
 </body>
