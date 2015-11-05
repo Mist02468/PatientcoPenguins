@@ -37,10 +37,10 @@ padding:20px;
 				<font size="3"> <%= @user.position %> </font>
 			</p>
 		</div>
-		<div width="50%" style="float:right;">
+		<div width="50%" style="float:right; max-width:425px; padding-top:8px;">
 			<div class="posts">
 				<table>
-					<% @posts.where("user_id = #{session[:user_id]}").where("kind = 0").order("voteCount DESC").order("created_at DESC").each do |post|%>
+					<% @posts.each do |post|%>
 						<div class = "highlight_row">
 						    <tr>
 						    	<td><%= link_to "#{post.text}", controller: "post", action: "show", id: post.id %></td>
