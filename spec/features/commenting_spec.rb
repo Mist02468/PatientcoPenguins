@@ -40,7 +40,7 @@ describe "CommentingSpec" do
     verify { (@driver.find_element(:xpath, "(//a[contains(text(),'GT Capstone')])[3]").text).should == "GT Capstone" }
     verify { (@driver.find_element(:css, "p.post").text).should == "test post" }
     
-    @driver.find_element(:link, "Back to Home").click
+    @driver.find_element(:id, "Pronnect").click
     @driver.find_element(:link, "Create Post").click
     @driver.find_element(:id, "post_text").clear
     @driver.find_element(:id, "post_text").send_keys "another test post"

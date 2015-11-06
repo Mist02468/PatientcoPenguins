@@ -1,5 +1,6 @@
 require "json"
 require "selenium-webdriver"
+require_relative "../testCommonFunctions.rb"
 include RSpec::Expectations
 
 describe "HeaderSpec" do
@@ -19,23 +20,39 @@ describe "HeaderSpec" do
 
   it "test_header_spec" do
     @driver.get(@base_url + "/access/login")
-    element_present?(:id, "Pronnect").should be_true
-    @driver.find_element(:css, "img[alt=\"Sign in 8b25c2de2af5f6c13c47d836fb64dfd43fbf9e587c70b15180e565848703760a\"]").click
-    @driver.find_element(:id, "session_key-oauth2SAuthorizeForm").clear
-    @driver.find_element(:id, "session_key-oauth2SAuthorizeForm").send_keys "gtcscapstone@gmail.com"
-    @driver.find_element(:id, "session_password-oauth2SAuthorizeForm").clear
-    @driver.find_element(:id, "session_password-oauth2SAuthorizeForm").send_keys "foUrtesting"
-    @driver.find_element(:name, "authorize").click
-    element_present?(:id, "Pronnect").should be_true
+    (@driver.title).should == "Pronnect"
+    verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }
+    verify { (@driver.find_element(:id, "RevenueCycle").text).should == "Revenue Cycle" }
+    
+    @driver = TestCommonFunctions.login(@base_url, @driver)
+
+    (@driver.title).should == "Pronnect"
+    verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }
+    verify { (@driver.find_element(:id, "RevenueCycle").text).should == "Revenue Cycle" }
+    
+    @driver.find_element(:link, "Create Post").click
+    (@driver.title).should == "Pronnect"
+    verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }
+    verify { (@driver.find_element(:id, "RevenueCycle").text).should == "Revenue Cycle" }
+    
     @driver.find_element(:id, "post_text").clear
     @driver.find_element(:id, "post_text").send_keys "Whee I posted things."
-    @driver.find_element(:id, "tag_name").clear
-    @driver.find_element(:id, "tag_name").send_keys "Tags"
-    @driver.find_element(:xpath, "(//input[@name='commit'])[2]").click
     @driver.find_element(:name, "commit").click
-    element_present?(:id, "Pronnect").should be_true
-    @driver.find_element(:link, "GT Capstone").click
-    element_present?(:id, "Pronnect").should be_true
+    (@driver.title).should == "Pronnect"
+    verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }
+    verify { (@driver.find_element(:id, "RevenueCycle").text).should == "Revenue Cycle" }
+    
+    @driver.find_element(:id, "Pronnect").click
+    @driver.find_element(:link, "View Profile").click
+    (@driver.title).should == "Pronnect"
+    verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }
+    verify { (@driver.find_element(:id, "RevenueCycle").text).should == "Revenue Cycle" }
+    
+    @driver.find_element(:id, "Pronnect").click
+    @driver.find_element(:link, "Create Event").click
+    (@driver.title).should == "Pronnect"
+    verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }
+    verify { (@driver.find_element(:id, "RevenueCycle").text).should == "Revenue Cycle" }
   end
 
   def element_present?(how, what)
