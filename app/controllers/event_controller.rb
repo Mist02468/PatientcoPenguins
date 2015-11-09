@@ -16,7 +16,7 @@ class EventController < ApplicationController
 	@tagsToAdd.each do |t|
 		@event.tags << createTag(t)
 	end
-	@event.doc_link = createGoogleDoc()
+	@event.doc_link = createGoogleDoc(@event)
 	@event.hangout_link = createGoogleHangoutOnAir(@event)
 	if @event.save!
       redirect_to action: "show", :id => @event.id
@@ -50,7 +50,7 @@ class EventController < ApplicationController
     end
   end
   
-  def createGoogleDoc
+  def createGoogleDoc(event)
 	require 'google/api_client'
 	
 	serviceAccount_email = '54678097976-94j19m7hap7c8k0jkii8gol8bg2hltco@developer.gserviceaccount.com'
@@ -63,7 +63,7 @@ class EventController < ApplicationController
     
     service = client.discovered_api('drive', 'v2')
     file = service.files.insert.request_schema.new({
-		   'title' => 'Test',
+		   'title' => event.topic,
 		   'mimeType' => 'application/vnd.google-apps.document'})
 	file.parents = [{'id' => '0B2PZURw_M0AlfkhISFdZQXgxd0RnTzVERmJxZ19ndDZVQV81T0tZTVpoWGtQYV9oYkdEYjA'}]
     
