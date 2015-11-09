@@ -26,8 +26,12 @@ class EventController < ApplicationController
   end
   
   def show
-    puts "Event Saved in the DB!"
     @event = Event.find(params[:id])
+    if @event.startTime > DateTime.new
+        @live = false
+    else
+        @live = true
+    end
   end
   
   def addTag
@@ -86,14 +90,19 @@ class EventController < ApplicationController
     require 'capybara/rspec'
     require 'capybara/rails'
 
+    Capybara.default_max_wait_time = 5
     session = Capybara::Session.new(:poltergeist)
+    
     session.visit('https://accounts.google.com/ServiceLogin?passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26feature%3Dredirect_login%26next%3D%252Fmy_live_events%253Faction_create_live_event%253D1%26hl%3Den&service=youtube&uilel=3&hl=en')
     session.fill_in('Email', :with => 'gtcscapstone@gmail.com')
     session.click_button('next')
     
     session.fill_in('Passwd', :with => get_secret('GoogleAccountPassword'))
     session.click_button('signIn')
-    #session.save_screenshot('here1.png', :full => true)
+    # TODO, make these fail better
+    #session.save_screenshot('rightAfterSignIn.png', :full => true)
+    session.find('#title') # let the next page load
+    #session.save_screenshot('afterSFindWaiting.png', :full => true)
 
     session.fill_in('title', :with => event.topic)
     script = 'document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].removeAttribute("readonly"); document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].value = "' + event.startTime.strftime("%b %e, %Y") + '";'
@@ -101,7 +110,11 @@ class EventController < ApplicationController
     session.find(:xpath, '//input[@class="yt-uix-form-input-text"]').set(event.startTime.strftime("%l:%M %p"))
     session.select('Unlisted', :from => 'privacy')
     session.first(:xpath, '//*[@class="save-cancel-buttons"]').click
-    sleep(4) # let the next page load
+    
+    #session.save_screenshot('rightAfterCreate.png', :full => true)
+    session.find('#creator-subheader-text') # let the next page load
+    #session.save_screenshot('afterCFindWaiting.png', :full => true)
+    
     #for debugging: session.save_screenshot('here1.png', :full => true)
     
     links = session.all('a', :text => event.topic)
