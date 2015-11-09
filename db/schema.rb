@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151027015840) do
+ActiveRecord::Schema.define(version: 20151109214622) do
 
   create_table "events", force: :cascade do |t|
     t.string   "topic",        null: false
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 20151027015840) do
     t.integer  "host_id",      null: false
     t.string   "doc_link",     null: false
     t.string   "hangout_link", null: false
+    t.datetime "endTime"
   end
 
   add_index "events", ["host_id"], name: "index_events_on_host_id"

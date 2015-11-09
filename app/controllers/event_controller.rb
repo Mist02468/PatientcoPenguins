@@ -28,9 +28,11 @@ class EventController < ApplicationController
   def show
     @event = Event.find(params[:id])
     if @event.startTime > DateTime.new
-        @live = false
+        @status = 'scheduled'
+    elsif not @event.endTime.nil?
+        @status = 'finished'
     else
-        @live = true
+        @status = 'live'
     end
   end
   

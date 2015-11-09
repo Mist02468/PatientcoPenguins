@@ -1,8 +1,6 @@
 <%= stylesheet_link_tag('event.scss') %>
 
-<% if @live %>
-    <p>Here</p>
-<% else %>
+<% if @status == 'scheduled' %>
     <div class="eventDiv">
     <p> You're invited by <%= link_to "#{@event.host.firstName} #{@event.host.lastName}", 
                               controller: "profile", action: 'show', user_id: @event.host.id, :class => "link" %>:</p>
@@ -14,4 +12,6 @@
             <% end %>
         </ul>
     </div>
+<% else %>
+    <p>Here</p>
 <% end %>
