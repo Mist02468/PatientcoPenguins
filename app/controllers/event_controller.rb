@@ -27,7 +27,7 @@ class EventController < ApplicationController
   
   def show
     @event = Event.find(params[:id])
-    if @event.startTime > DateTime.new
+    if @event.startTime > DateTime.now
         @status = 'scheduled'
     elsif not @event.endTime.nil?
         @status = 'finished'
@@ -79,7 +79,7 @@ class EventController < ApplicationController
              
     if result.status == 200
 		puts 'Successful'
-		return JSON.parse(result.response.env['body'])['id']
+		return JSON.parse(result.response.env['body'])['embedLink']
 		#pp JSON.parse(client.execute(:api_method => service.files.list).env['body'])
 		#pp client.execute(:api_method => service.files.list)
     else
@@ -123,7 +123,7 @@ class EventController < ApplicationController
     if links.count() == 1
         link = links.first()
     else
-        numPrevSameTopicEvents = Event.where(topic: event.topic).where('startTime >= :today_date_time', {today_date_time: DateTime.new}).where('startTime < :new_event_date_time', {new_event_date_time: event.startTime}).count
+        numPrevSameTopicEvents = Event.where(topic: event.topic).where('startTime >= :today_date_time', {today_date_time: DateTime.now}).where('startTime < :new_event_date_time', {new_event_date_time: event.startTime}).count
         j = 0
         links.each do |l|
             if j == numPrevSameTopicEvents

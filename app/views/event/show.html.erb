@@ -1,17 +1,26 @@
 <%= stylesheet_link_tag('event.scss') %>
 
-<% if @status == 'scheduled' %>
-    <div class="eventDiv">
-    <p> You're invited by <%= link_to "#{@event.host.firstName} #{@event.host.lastName}", 
-                              controller: "profile", action: 'show', user_id: @event.host.id, :class => "link" %>:</p>
-        <p class='eventInfo'><%= @event.topic %> Roundtable Discussion</p>
-        <h3>on <%= @event.startTime.in_time_zone("Eastern Time (US & Canada)").strftime(" %m/%d/%Y at %I:%M%p") %></h3>
-        <ul>
-            <% @event.tags.each do |t| %>
-              <li class="tag"><%= t.name %></li>
-            <% end %>
-        </ul>
-    </div>
-<% else %>
-    <p>Here</p>
-<% end %>
+<div class="eventDiv">
+    <% if @status == 'scheduled' %>
+        <p> You're invited by <%= link_to "#{@event.host.firstName} #{@event.host.lastName}", 
+                                  controller: "profile", action: 'show', user_id: @event.host.id, :class => "link" %>:</p>
+    <% elsif @status == 'live' %>
+        <p> <%= link_to "#{@event.host.firstName} #{@event.host.lastName}", 
+                controller: "profile", action: 'show', user_id: @event.host.id, :class => "link" %> is hosting:</p>
+    <% else %>
+        <p> <%= link_to "#{@event.host.firstName} #{@event.host.lastName}", 
+                controller: "profile", action: 'show', user_id: @event.host.id, :class => "link" %> hosted:</p>
+    <% end %>
+    
+    <p class='eventInfo'><%= @event.topic %> Roundtable Discussion</p>
+    <h3>on <%= @event.startTime.in_time_zone("Eastern Time (US & Canada)").strftime(" %m/%d/%Y at %I:%M%p") %></h3>
+    <ul>
+        <% @event.tags.each do |t| %>
+            <li class="tag"><%= t.name %></li>
+        <% end %>
+    </ul>
+    
+    <% if @status != 'scheduled' %>
+        <iframe src="<%= @event.doc_link %>"></iframe>
+    <% end %>
+</div>
