@@ -79,8 +79,7 @@ class EventController < ApplicationController
              
     if result.status == 200
 		puts 'Successful'
-        rootLink = JSON.parse(result.response.env['body'])['alternateLink'][0..-9]  #take off drivesdk
-		return rootLink + 'sharing' #add sharing in its place
+		return JSON.parse(result.response.env['body'])['id']
 		#pp JSON.parse(client.execute(:api_method => service.files.list).env['body'])
 		#pp client.execute(:api_method => service.files.list)
     else

@@ -23,9 +23,10 @@
 
 <% if @status != 'scheduled' %>
     <div width="50%" style="float:left;">
+        <iframe height="315px" width="560px" src="https://www.youtube.com/embed/<%= @event.hangout_link %>"></iframe>
     </div>
         
     <div width="50%" style="float:right;">
-        <iframe height="400px" width="550px" src="<%= @event.doc_link %>"></iframe>
+        <iframe height="400px" width="550px" src="https://docs.google.com/document/d/<%= @event.doc_link %>/edit?usp=sharing"></iframe>
     </div>
 <% end %>
