@@ -13,7 +13,7 @@
     <% end %>
     
     <p class='eventInfo'><%= @event.topic %> Roundtable Discussion</p>
-    <h3>on <%= @event.startTime.in_time_zone("Eastern Time (US & Canada)").strftime(" %m/%d/%Y at %I:%M%p") %></h3>
+    <h3>on <%= @event.startTime.in_time_zone.strftime(" %m/%d/%Y at %I:%M%p") %></h3>
     <ul>
         <% @event.tags.each do |t| %>
             <li class="tag"><%= t.name %></li>

@@ -3,7 +3,7 @@
   <p> <%= link_to "#{@post.user.firstName} #{@post.user.lastName}",
    controller: "profile", action: 'show', user_id: @post.user.id, :class => "link"%> said:</p>
   <p class="post"><%= @post.text %></p>
-  <h3> on <%= @post.created_at.in_time_zone("Eastern Time (US & Canada)").strftime(" %m/%d/%Y at %I:%M%p") %></h3>
+  <h3> on <%= @post.created_at.in_time_zone.strftime(" %m/%d/%Y at %I:%M%p") %></h3>
   <ul>
     <% @post.tags.each do |t| %>
       <li class="tag"><%= t.name %></li>
@@ -20,7 +20,7 @@
         <td><%= c.text %></td>
         <td> - <%= link_to "#{c.user.firstName} #{c.user.lastName}",
          controller: "profile", action: 'show', user_id: c.user.id, :class => "link"%></td>
-         <td><h3> on <%= c.created_at.in_time_zone("Eastern Time (US & Canada)").strftime(" %m/%d/%Y at %I:%M%p") %></h3></td>
+         <td><h3> on <%= c.created_at.in_time_zone.strftime(" %m/%d/%Y at %I:%M%p") %></h3></td>
       </tr>
     <% end %>
   </table>

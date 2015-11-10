@@ -9,8 +9,8 @@ class EventController < ApplicationController
   
   def create
 	@event = Event.new(event_params)
-	@event.startTime = DateTime.civil(params[:datetime][:year].to_i, params[:datetime][:month].to_i, params[:datetime][:day].to_i, params[:datetime][:hour].to_i, params[:datetime][:minute].to_i)
-	@event.host = User.find(session[:user_id])
+	@event.startTime = DateTime.civil(params[:datetime][:year].to_i, params[:datetime][:month].to_i, params[:datetime][:day].to_i, params[:datetime][:hour].to_i, params[:datetime][:minute].to_i, 0, Time.zone.formatted_offset)
+    @event.host = User.find(session[:user_id])
 	
 	@tagsToAdd = params[:tagsToAdd].split(" ")
 	@tagsToAdd.each do |t|
@@ -27,7 +27,7 @@ class EventController < ApplicationController
   
   def show
     @event = Event.find(params[:id])
-    if @event.startTime > DateTime.now
+    if @event.startTime.in_time_zone.to_i > DateTime.now.in_time_zone.to_i
         @status = 'scheduled'
     elsif not @event.endTime.nil?
         @status = 'finished'
@@ -107,9 +107,9 @@ class EventController < ApplicationController
     #session.save_screenshot('afterSFindWaiting.png', :full => true)
 
     session.fill_in('title', :with => event.topic)
-    script = 'document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].removeAttribute("readonly"); document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].value = "' + event.startTime.strftime("%b %e, %Y") + '";'
+    script = 'document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].removeAttribute("readonly"); document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].value = "' + event.startTime.in_time_zone.strftime("%b %e, %Y") + '";'
     session.execute_script(script)
-    session.find(:xpath, '//input[@class="yt-uix-form-input-text"]').set(event.startTime.strftime("%l:%M %p"))
+    session.find(:xpath, '//input[@class="yt-uix-form-input-text"]').set(event.startTime.in_time_zone.strftime("%l:%M %p"))
     session.select('Unlisted', :from => 'privacy')
     session.first(:xpath, '//*[@class="save-cancel-buttons"]').click
     
@@ -123,7 +123,7 @@ class EventController < ApplicationController
     if links.count() == 1
         link = links.first()
     else
-        numPrevSameTopicEvents = Event.where(topic: event.topic).where('startTime >= :today_date_time', {today_date_time: DateTime.now}).where('startTime < :new_event_date_time', {new_event_date_time: event.startTime}).count
+        numPrevSameTopicEvents = Event.where(topic: event.topic).where('startTime >= :today_date_time', {today_date_time: DateTime.current.utc}).where('startTime < :new_event_date_time', {new_event_date_time: event.startTime.utc}).count
         j = 0
         links.each do |l|
             if j == numPrevSameTopicEvents
