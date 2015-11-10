@@ -11,7 +11,11 @@
 	<% end %>
 	<ul>
 		<% @tagsToAdd.each do |t| %>
-				<li class="tag"><%= t %></li>
+				<li class="tag">
+                    <div>
+                        <%= t %><%= link_to "X", action: 'removeTag', tag: t, tagsToAdd: @tagsToAdd, currentPostText: @post.text %>
+                    </div>
+                </li>
 		<% end %>
 	</ul>
 </br>

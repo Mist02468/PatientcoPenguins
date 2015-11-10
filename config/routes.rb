@@ -12,6 +12,8 @@ Rails.application.routes.draw do
 
   get 'post/create'
   post 'post/create'
+  post 'post/removeTag'
+  get 'post/removeTag'
   post 'post/addTag'
   get 'post/addTag'
 

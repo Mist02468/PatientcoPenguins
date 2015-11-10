@@ -51,6 +51,14 @@ class PostController < ApplicationController
     end
 	render "new"
   end
+  
+  def removeTag
+    @post = Post.new
+    @post.text = params[:currentPostText]
+	@tagsToAdd = params[:tagsToAdd]
+    @tagsToAdd.delete(params[:tag])
+	render "new" #can redirect instead?
+  end
 
   private
   def post_params
