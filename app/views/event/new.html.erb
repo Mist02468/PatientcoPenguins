@@ -44,6 +44,17 @@ $(document).ready(function () {
                 }
             }
     })
+    
+    $.validator.addMethod('mustChooseFutureDateTime', function (value) {
+        var inputDateTime   = new Date($("#datetime_year").val(), $("#datetime_month").val() - 1, $("#datetime_day").val(), $("#datetime_hour").val(), $("#datetime_minute").val(), 0, 0);
+        var currentDateTime = new Date();
+        currentDateTime.setMinutes(currentDateTime.getMinutes() + 5);
+        if (inputDateTime > currentDateTime) {
+            return true;
+        } else {
+            return false;
+        }
+    }, 'Please enter a time at least 5 minutes in the future');
 
     $("#eventForm").validate({
             onkeyup: false,
@@ -52,7 +63,8 @@ $(document).ready(function () {
             errorElement:'div',
             errorLabelContainer: '#eventError',
             rules: {
-                "event[topic]": {required: true}
+                "event[topic]": {required: true},
+                "datetime[minute]": {mustChooseFutureDateTime: true}
             },
             messages: {
                 "event[topic]": {
