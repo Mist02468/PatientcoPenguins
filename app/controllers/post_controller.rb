@@ -7,7 +7,15 @@ class PostController < ApplicationController
 
   def new
     @post = Post.new
-    @tagsToAdd = []
+    if params[:tag].present?
+        @post.text = params[:currentPostText]
+        addTag()
+    elsif params[:tagToRemove].present?
+        @post.text = params[:currentPostText]
+        removeTag()
+    else
+        @tagsToAdd = []
+    end
   end
 
   def create
@@ -41,24 +49,6 @@ class PostController < ApplicationController
     @post = Post.find(params[:id])
     @comments = Post.where(:originatingPost_id => params[:id])
   end
-  
-  def addTag
-    @post = Post.new
-    @post.text = params[:currentPostText]
-	@tagsToAdd = params[:tagsToAdd].split(" ")
-    if (@tagsToAdd.include? tag_params['name']) == false
-        @tagsToAdd << tag_params['name']
-    end
-	render "new"
-  end
-  
-  def removeTag
-    @post = Post.new
-    @post.text = params[:currentPostText]
-	@tagsToAdd = params[:tagsToAdd]
-    @tagsToAdd.delete(params[:tag])
-	render "new" #can redirect instead?
-  end
 
   private
   def post_params
@@ -66,17 +56,5 @@ class PostController < ApplicationController
   end
   def tag_params
 	params.require(:tag).permit(:name)
-  end
-  
-  def createTag(tagName)
-	found_tag = Tag.where(:name => tagName).first
-	if found_tag == nil
-		tag = Tag.new()
-		tag.name = tagName
-		tag.save
-	else
-		tag = found_tag
-	end
-	return tag
   end
 end

@@ -2,8 +2,8 @@
 
 <div class="postDiv">
 	<h2> Create a Post</h2>
-	<%= form_tag({:action => 'addTag'}, {:id => 'tagForm'}) do %>
-        <%= hidden_field_tag(:currentPostText, @post.text, :id => 'save-currentPostText') %>
+	<%= form_tag({:action => 'new'}, {:id => 'tagForm'}) do %>
+        <%= hidden_field_tag(:currentPostText, @post.text, :class => 'save-currentPostText') %>
 		<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
 		<%= text_field(:tag, :name, :placeholder => "tag me!", :class => "tag_box") %>
 		<%= submit_tag("Add Tag to Post", :class => "button") %>
@@ -12,8 +12,16 @@
 	<ul>
 		<% @tagsToAdd.each do |t| %>
 				<li class="tag">
-                    <div>
-                        <%= t %><%= link_to "X", action: 'removeTag', tag: t, tagsToAdd: @tagsToAdd, currentPostText: @post.text %>
+                    <div style="float:left;">
+                        <%= t %>
+                    </div>
+                    <div style="float:left;">
+                        <%= form_tag({:action => 'new'}) do %>
+                            <%= hidden_field_tag(:currentPostText, @post.text, :class => 'save-currentPostText') %>
+                            <%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
+                            <%= hidden_field_tag(:tagToRemove, t) %>
+                            <%= submit_tag("x", :class => "button deleteButton") %>
+                        <% end %>
                     </div>
                 </li>
 		<% end %>
@@ -21,13 +29,20 @@
 </br>
 	<%= form_tag({:action => 'create'}, {:id => 'postForm'}) do %>
 		<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
-		<%= text_area(:post, :text, :class => "text_field", :placeholder => "write post here", :onchange => 'document.getElementById("save-currentPostText").value = this.value') %><br>
+		<%= text_area(:post, :text, :id => "postTextField", :class => "text_field", :placeholder => "write post here", :onchange => "updateHiddenFieldsWithCurrentText()") %><br>
 		<%= submit_tag("Post", :class => "button_submit") %>
         <div id="postError"></div>
 	<% end %>
 </div>
 
 <script>
+function updateHiddenFieldsWithCurrentText() {
+    $(".save-currentPostText").each(function() {
+        console.log($("#postTextField").val())
+        $(this).val($("#postTextField").val())
+    });
+}
+    
 $(document).ready(function () {
 
     $.validator.addMethod('tagHasNoSpaces', function (value) {
