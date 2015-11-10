@@ -19,8 +19,13 @@
             <li class="tag"><%= t.name %></li>
         <% end %>
     </ul>
-    
-    <% if @status != 'scheduled' %>
-        <iframe src="<%= @event.doc_link %>"></iframe>
-    <% end %>
 </div>
+
+<% if @status != 'scheduled' %>
+    <div width="50%" style="float:left;">
+    </div>
+        
+    <div width="50%" style="float:right;">
+        <iframe height="400px" width="550px" src="<%= @event.doc_link %>"></iframe>
+    </div>
+<% end %>
