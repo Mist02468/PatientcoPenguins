@@ -4,7 +4,15 @@ class EventController < ApplicationController
   
   def new
     @event = Event.new
-    @tagsToAdd = []
+    if params[:tag].present?
+        @event.topic = params[:currentEventTopic]
+        addTag()
+    elsif params[:tagToRemove].present?
+        @event.topic = params[:currentEventTopic]
+        removeTag()
+    else
+        @tagsToAdd = []
+    end
   end
   
   def create
@@ -36,24 +44,13 @@ class EventController < ApplicationController
     end
   end
   
-  def addTag
-    @event = Event.new
-    @event.topic = params[:currentEventTopic]
-	@tagsToAdd = params[:tagsToAdd].split(" ")
-    if (@tagsToAdd.include? tag_params['name']) == false
-        @tagsToAdd << tag_params['name']
-    end
-	render "new"
+  private
+  def event_params
+    params.require(:event).permit(:topic)
   end
-
-  def join
-  end
-
-  def invite
-	if params[:userId].present?
-      puts "Successful"
-    else
-    end
+  
+  def tag_params
+	params.require(:tag).permit(:name)
   end
   
   def createGoogleDoc(event)
@@ -137,23 +134,4 @@ class EventController < ApplicationController
     return address[1]
   end
   
-  private
-  def event_params
-    params.require(:event).permit(:topic)
-  end
-  def tag_params
-	params.require(:tag).permit(:name)
-  end
-  
-  def createTag(tagName)
-	found_tag = Tag.where(:name => tagName).first
-	if found_tag == nil
-		tag = Tag.new()
-		tag.name = tagName
-		tag.save
-	else
-		tag = found_tag
-	end
-	return tag
-  end
 end

@@ -12,10 +12,6 @@ Rails.application.routes.draw do
 
   get 'post/create'
   post 'post/create'
-  post 'post/removeTag'
-  get 'post/removeTag'
-  post 'post/addTag'
-  get 'post/addTag'
 
   get 'post/comment'
   get 'post/upvote'
@@ -26,10 +22,10 @@ Rails.application.routes.draw do
   get 'search/searchByUser'
 
   get 'event/new'
+  post 'event/new'
   post 'event/create'
   get 'event/show'
-  post 'event/addTag'
-
+  
   get 'access/login'
   get 'access/logout'
   get 'access/finishLinkedInAuth'
