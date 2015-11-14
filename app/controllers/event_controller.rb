@@ -40,7 +40,7 @@ class EventController < ApplicationController
     @user  = User.find(session[:user_id])
     if not @event.endTime.nil?
         @status = 'finished'
-    else if not @event.hangout_join_link.nil?
+    elsif not @event.hangout_join_link.nil?
         @status = 'live'
     else
         @status = 'scheduled'
