@@ -197,8 +197,9 @@ class EventController < ApplicationController
     address = link[:href].split('=') # gives for example /watch?v=tuV0fqh5jgQ, will have to use as https://www.youtube.com/watch?v=tuV0fqh5jgQ and we'll only store tuV0fqh5jgQ 
     viewLink = address[1]
     
-    startBroadcastButton = find(:xpath, '//*[@data-video-id="' + viewLink + '"]/div/div[2]/div[2]/p/button')
-    startLinkPortion = startBroadcastButton[:data-token]
+    #session.save_screenshot('line200.png', :full => true)
+    startBroadcastButton = session.find(:xpath, '//*[@data-video-id="' + viewLink + '"]')
+    startLinkPortion = startBroadcastButton[:"data-token"]
     startLink = 'https://plus.google.com/hangouts/_/ytl/' + startLinkPortion + '?eid=112363874857852707319&hl=en_US&authuser=0'
     
     startBroadcastButton.click
