@@ -1,6 +1,11 @@
 <%= stylesheet_link_tag('home_feed.scss') %>
 
-<h1>Home</h1>
+<% if @tag != nil %>
+    <h1>Posts Tagged With <%= @tag.name %></h1>
+<% else %>
+    <h1>Home</h1>
+<% end %>
+
 <%= link_to "View Profile", controller: "profile", action: 'show', user_id: session[:user_id] %>
 <%= link_to "Create Post","../post/new" %>
 <%= link_to "Create Event","../event/new" %>
