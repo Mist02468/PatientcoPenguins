@@ -1,7 +1,7 @@
 <%= stylesheet_link_tag('event.scss') %>
 
 <div class="eventDiv">
-    <% if @status == 'scheduled' %>
+    <% if @status == 'scheduled' and @user.id != @event.host.id %>
         <p> You're invited by <%= link_to "#{@event.host.firstName} #{@event.host.lastName}", 
                                   controller: "profile", action: 'show', user_id: @event.host.id, :class => "link" %>:</p>
     <% elsif @status == 'live' %>
@@ -19,12 +19,22 @@
             <li class="tag"><%= t.name %></li>
         <% end %>
     </ul>
+    
+    <% if @user.id == @event.host.id %>
+        <% if @status == 'scheduled' %>
+            <%= button_to "Start this Event", action: 'start', id: @event.id %>
+        <% elsif @status == 'live' %>
+            <%= button_to "End this Event", action: 'stop', id: @event.id %>
+    <% end %>
 </div>
 
 <% if @status != 'scheduled' %>
     <br>
     <br>
     <div width="50%" style="float:left;">
+        <% if @status == 'live' %>
+            <%= link_to "Join the Discussion", @event.hangout_join_link, :target => "_blank" %>
+        <% end %>
         <iframe height="315px" width="560px" src="https://www.youtube.com/embed/<%= @event.hangout_link %>"></iframe>
     </div>
         

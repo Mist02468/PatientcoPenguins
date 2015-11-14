@@ -25,7 +25,9 @@ class EventController < ApplicationController
 		@event.tags << createTag(t)
 	end
 	@event.doc_link = createGoogleDoc(@event)
-	@event.hangout_link = createGoogleHangoutOnAir(@event)
+    links = createGoogleHangoutOnAir(@event)
+	@event.hangout_view_link  = links[0]
+    @event.hangout_start_link = links[1]
 	if @event.save!
       redirect_to action: "show", :id => @event.id
     else
@@ -35,13 +37,60 @@ class EventController < ApplicationController
   
   def show
     @event = Event.find(params[:id])
-    if @event.startTime.in_time_zone.to_i > DateTime.now.in_time_zone.to_i
-        @status = 'scheduled'
-    elsif not @event.endTime.nil?
+    @user  = User.find(session[:user_id])
+    if not @event.endTime.nil?
         @status = 'finished'
-    else
+    else if not @event.hangout_join_link.nil?
         @status = 'live'
+    else
+        @status = 'scheduled'
     end
+  end
+  
+  def start
+    @event = Event.find(params[:id])
+    
+    require 'capybara/poltergeist'
+    require 'capybara/rspec'
+    require 'capybara/rails'
+
+    Capybara.default_max_wait_time = 5
+    session = Capybara::Session.new(:poltergeist)
+    
+    session.visit(@event.hangout_start_link)
+    session = joinHangout(session)
+    
+    session.find(:xpath, "//div[@id=':sd.Pt']/div/div[2]/div").click #click the add people icon
+    boxWithJoinLink = session.find(:id, ":vb.vt") #find the box with the join link
+    joinLink = boxWithJoinLink.value
+    session.find(:id, ":vc.Ji").click #click the close button
+    
+    session.find(:id, ":t4.ak").click #click Start Broadcast
+    session.find(:id, ":vn.Hk").click #click Okay
+
+    @event.hangout_join_link = joinLink
+    @event.save!
+    redirect_to action: "show", :id => @event.id
+  end
+  
+  def stop
+    @event = Event.find(params[:id])
+    
+    require 'capybara/poltergeist'
+    require 'capybara/rspec'
+    require 'capybara/rails'
+
+    Capybara.default_max_wait_time = 5
+    session = Capybara::Session.new(:poltergeist)
+    
+    session.visit(@event.hangout_join_link)
+    session = joinHangout(session)
+    
+    session.find(:id, ":t4.ak").click #click Stop Broadcast
+    
+    @event.endTime = DateTime.current
+    @event.save!
+    redirect_to action: "show", :id => @event.id
   end
   
   private
@@ -51,6 +100,20 @@ class EventController < ApplicationController
   
   def tag_params
 	params.require(:tag).permit(:name)
+  end
+  
+  def joinHangout(session)
+    session.fill_in('Email', :with => 'gtcscapstone@gmail.com')
+    session.click_button('next')
+    
+    session.fill_in('Passwd', :with => get_secret('GoogleAccountPassword'))
+    session.click_button('signIn')
+    
+    session.find(:css, "div.a-X-fe").click #click the check box
+    session.find(:id, ":t0.Tj").click #click Okay I get it button
+    session.find(:id, ":t0.Tj").click #click Okay I get it button
+    session.find(:id, ":t1.Et").click #click Join
+    return session
   end
   
   def createGoogleDoc(event)
@@ -130,8 +193,16 @@ class EventController < ApplicationController
             j += 1
         end
     end
+    
     address = link[:href].split('=') # gives for example /watch?v=tuV0fqh5jgQ, will have to use as https://www.youtube.com/watch?v=tuV0fqh5jgQ and we'll only store tuV0fqh5jgQ 
-    return address[1]
+    viewLink = address[1]
+    
+    startBroadcastButton = find(:xpath, '//*[@data-video-id="' + viewLink + '"]/div/div[2]/div[2]/p/button')
+    startLinkPortion = startBroadcastButton[:data-token]
+    startLink = 'https://plus.google.com/hangouts/_/ytl/' + startLinkPortion + '?eid=112363874857852707319&hl=en_US&authuser=0'
+    
+    startBroadcastButton.click
+    return [viewLink, startLink]
   end
   
 end
