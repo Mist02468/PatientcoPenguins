@@ -53,6 +53,12 @@ class EventController < ApplicationController
     require 'capybara/poltergeist'
     require 'capybara/rspec'
     require 'capybara/rails'
+    
+    Capybara.register_driver :poltergeist do |app|
+        phantomJSdriver = Capybara::Poltergeist::Driver.new(app, {js_errors: false})
+        phantomJSdriver.headers = {"User-Agent" => "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0"}
+        phantomJSdriver
+    end
 
     Capybara.default_max_wait_time = 5
     session = Capybara::Session.new(:poltergeist)
@@ -103,12 +109,23 @@ class EventController < ApplicationController
   end
   
   def joinHangout(session)
+    #Capybara.page.driver.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0")
+    #Capybara.page.driver.headers = {"User-Agent" => "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0"}
+    
     session.fill_in('Email', :with => 'gtcscapstone@gmail.com')
     session.click_button('next')
+    
+    #p session.response_headers
+    
+    #Capybara.page.driver.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0")
     
     session.fill_in('Passwd', :with => get_secret('GoogleAccountPassword'))
     session.click_button('signIn')
     
+    #p session.response_headers
+    
+    sleep(10)
+    session.save_screenshot('line116.png', :full => true)
     session.find(:css, "div.a-X-fe").click #click the check box
     session.find(:id, ":t0.Tj").click #click Okay I get it button
     session.find(:id, ":t0.Tj").click #click Okay I get it button

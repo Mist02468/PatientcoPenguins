@@ -1,15 +1,17 @@
 <%= stylesheet_link_tag('event.scss') %>
 
 <div class="eventDiv">
-    <% if @status == 'scheduled' and @user.id != @event.host.id %>
-        <p> You're invited by <%= link_to "#{@event.host.firstName} #{@event.host.lastName}", 
-                                  controller: "profile", action: 'show', user_id: @event.host.id, :class => "link" %>:</p>
-    <% elsif @status == 'live' %>
-        <p> <%= link_to "#{@event.host.firstName} #{@event.host.lastName}", 
-                controller: "profile", action: 'show', user_id: @event.host.id, :class => "link" %> is hosting:</p>
-    <% else %>
-        <p> <%= link_to "#{@event.host.firstName} #{@event.host.lastName}", 
-                controller: "profile", action: 'show', user_id: @event.host.id, :class => "link" %> hosted:</p>
+    <% if @user.id != @event.host.id %>
+        <% if @status == 'scheduled' %>
+            <p> You're invited by <%= link_to "#{@event.host.firstName} #{@event.host.lastName}", 
+                                      controller: "profile", action: 'show', user_id: @event.host.id, :class => "link" %>:</p>
+        <% elsif @status == 'live' %>
+            <p> <%= link_to "#{@event.host.firstName} #{@event.host.lastName}", 
+                    controller: "profile", action: 'show', user_id: @event.host.id, :class => "link" %> is hosting:</p>
+        <% else %>
+            <p> <%= link_to "#{@event.host.firstName} #{@event.host.lastName}", 
+                    controller: "profile", action: 'show', user_id: @event.host.id, :class => "link" %> hosted:</p>
+        <% end %>
     <% end %>
     
     <p class='eventInfo'><%= @event.topic %> Roundtable Discussion</p>
@@ -22,9 +24,10 @@
     
     <% if @user.id == @event.host.id %>
         <% if @status == 'scheduled' %>
-            <%= button_to "Start this Event", action: 'start', id: @event.id %>
+            <%= button_to "Start this Event", {action: 'start', id: @event.id}, class: "button" %>
         <% elsif @status == 'live' %>
-            <%= button_to "End this Event", action: 'stop', id: @event.id %>
+            <%= button_to "End this Event", {action: 'stop', id: @event.id}, class: "button" %>
+        <% end %>
     <% end %>
 </div>
 

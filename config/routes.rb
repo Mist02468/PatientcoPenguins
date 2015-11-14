@@ -25,6 +25,8 @@ Rails.application.routes.draw do
   post 'event/new'
   post 'event/create'
   get 'event/show'
+  post 'event/start'
+  post 'event/stop'
   
   get 'access/login'
   get 'access/logout'
