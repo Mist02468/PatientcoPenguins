@@ -23,8 +23,8 @@ describe "PostTagging" do
     
     @driver.find_element(:link, "Create Post").click
     
-    @driver.find_element(:id, "post_text").clear
-    @driver.find_element(:id, "post_text").send_keys "test post"
+    @driver.find_element(:id, "postTextField").clear
+    @driver.find_element(:id, "postTextField").send_keys "test post"
     
     @driver.find_element(:name, "commit").click
     verify { (@driver.find_element(:id, "tag_name-error").text).should == "Please enter a tag" }
@@ -39,14 +39,14 @@ describe "PostTagging" do
     @driver.find_element(:name, "commit").click
     verify { (@driver.find_element(:css, "li.tag").text).should == "testTag1" }
     
-    verify { (@driver.find_element(:id, "post_text").text).should == "test post" }
+    verify { (@driver.find_element(:id, "postTextField").text).should == "test post" }
     
     @driver.find_element(:id, "tag_name").clear
     @driver.find_element(:id, "tag_name").send_keys "testTag1"
     @driver.find_element(:name, "commit").click
     verify { (@driver.find_element(:css, "li.tag").text).should == "testTag1" }
     
-    verify { (@driver.find_element(:id, "post_text").text).should == "test post" }
+    verify { (@driver.find_element(:id, "postTextField").text).should == "test post" }
     
     @driver.find_element(:id, "tag_name").clear
     @driver.find_element(:id, "tag_name").send_keys "testTag2"
@@ -54,13 +54,28 @@ describe "PostTagging" do
     verify { (@driver.find_element(:css, "li.tag").text).should == "testTag1" }
     verify { (@driver.find_element(:xpath, "//li[2]").text).should == "testTag2" }
     
-    verify { (@driver.find_element(:id, "post_text").text).should == "test post" }
+    verify { (@driver.find_element(:id, "postTextField").text).should == "test post" }
     
-    @driver.find_element(:xpath, "(//input[@name='commit'])[2]").click
+    @driver.find_element(:id, "tag_name").clear
+    @driver.find_element(:id, "tag_name").send_keys "testTag3"
+    @driver.find_element(:name, "commit").click
+    verify { (@driver.find_element(:css, "li.tag").text).should == "testTag1" }
+    verify { (@driver.find_element(:xpath, "//li[2]").text).should == "testTag2" }
+    verify { (@driver.find_element(:xpath, "//li[3]").text).should == "testTag3" }
+    
+    verify { (@driver.find_element(:id, "postTextField").text).should == "test post" }
+    
+    @driver.find_element(:xpath, "(//input[@name='commit'])[3]").click
+    verify { (@driver.find_element(:css, "li.tag").text).should == "testTag1" }
+    verify { (@driver.find_element(:xpath, "//li[2]").text).should == "testTag3" }
+    
+    verify { (@driver.find_element(:id, "postTextField").text).should == "test post" }
+    
+    @driver.find_element(:css, "#postForm > input[name=\"commit\"]").click
     
     verify { (@driver.find_element(:css, "p.post").text).should == "test post" }
     verify { (@driver.find_element(:css, "li.tag").text).should == "testTag1" }
-    verify { (@driver.find_element(:xpath, "//li[2]").text).should == "testTag2" }
+    verify { (@driver.find_element(:xpath, "//li[2]").text).should == "testTag3" }
   end
   
   def element_present?(how, what)

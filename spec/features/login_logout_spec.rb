@@ -20,10 +20,9 @@ describe "LoginLogoutSpec" do
   
   it "test_login_logout_spec" do
     @driver = TestCommonFunctions.login(@base_url, @driver)
-    
-    #uncomment these once header is added to the home feed page
-    #verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }
-    #verify { (@driver.find_element(:id, "RevenueCycle").text).should == "Revenue Cycle" }
+
+    verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }
+    verify { (@driver.find_element(:id, "RevenueCycle").text).should == "Revenue Cycle" }
     
     @driver.find_element(:link, "View Profile").click
     verify { (@driver.find_element(:xpath, "//font[4]").text).should == "gtcscapstone@gmail.com" }

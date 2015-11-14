@@ -35,9 +35,9 @@ describe "HeaderSpec" do
     verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }
     verify { (@driver.find_element(:id, "RevenueCycle").text).should == "Revenue Cycle" }
     
-    @driver.find_element(:id, "post_text").clear
-    @driver.find_element(:id, "post_text").send_keys "Whee I posted things."
-    @driver.find_element(:name, "commit").click
+    @driver.find_element(:id, "postTextField").clear
+    @driver.find_element(:id, "postTextField").send_keys "Whee I posted things."
+    @driver.find_element(:xpath, "(//input[@name='commit'])[2]").click
     (@driver.title).should == "Pronnect"
     verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }
     verify { (@driver.find_element(:id, "RevenueCycle").text).should == "Revenue Cycle" }

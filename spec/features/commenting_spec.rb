@@ -23,8 +23,8 @@ describe "CommentingSpec" do
     
     @driver.find_element(:link, "Create Post").click
     
-    @driver.find_element(:id, "post_text").clear
-    @driver.find_element(:id, "post_text").send_keys "test post"
+    @driver.find_element(:id, "postTextField").clear
+    @driver.find_element(:id, "postTextField").send_keys "test post"
     @driver.find_element(:xpath, "(//input[@name='commit'])[2]").click
     
     @driver.find_element(:id, "post_text").clear
@@ -42,8 +42,8 @@ describe "CommentingSpec" do
     
     @driver.find_element(:id, "Pronnect").click
     @driver.find_element(:link, "Create Post").click
-    @driver.find_element(:id, "post_text").clear
-    @driver.find_element(:id, "post_text").send_keys "another test post"
+    @driver.find_element(:id, "postTextField").clear
+    @driver.find_element(:id, "postTextField").send_keys "another test post"
     @driver.find_element(:xpath, "(//input[@name='commit'])[2]").click
     
     @driver.find_element(:id, "post_text").clear
