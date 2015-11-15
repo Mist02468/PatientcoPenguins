@@ -110,7 +110,11 @@ class EventController < ApplicationController
     
     sleep(5)
     present = driver.find_elements(:css, "div.a-X-fe")
+<<<<<<< HEAD
     if present.length > 0
+=======
+    #if present.length > 0:
+>>>>>>> ea782dde2100e667c5811d01dc3c4fc0a246999e
         driver.find_element(:css, "div.a-X-fe").click #click the check box
         driver.find_element(:id, ":t0.Tj").click #click Okay I get it button
         driver.find_element(:id, ":t1.Et").click #click Join
