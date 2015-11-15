@@ -94,6 +94,7 @@ class EventController < ApplicationController
     profile['plugin.state.npgoogletalk'] = 2
     profile['plugin.state.npo1d']        = 2
     driver = Selenium::WebDriver.for(:firefox, :profile => profile)
+    driver.manage.timeouts.implicit_wait = 5 # seconds
     
     driver.get(link)
     driver.find_element(:id, "Email").clear
@@ -110,10 +111,11 @@ class EventController < ApplicationController
     
     sleep(5)
     present = driver.find_elements(:css, "div.a-X-fe")
-    #if present.length > 0:
+    if present.length > 0
         driver.find_element(:css, "div.a-X-fe").click #click the check box
         driver.find_element(:id, ":t0.Tj").click #click Okay I get it button
         driver.find_element(:id, ":t1.Et").click #click Join
+    end
     
     return driver
   end
