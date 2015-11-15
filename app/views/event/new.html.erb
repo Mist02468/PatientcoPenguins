@@ -1,3 +1,4 @@
+<font size="6" color=#32CD32> test </font>
 <%= form_tag({:action => 'create'}, {:id => 'eventForm'}) do %>
 	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
 	<%= select_datetime(DateTime.current.in_time_zone, ampm: true, :prefix => :datetime) %><br>
