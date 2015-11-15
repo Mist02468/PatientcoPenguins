@@ -1,9 +1,30 @@
-<font size="6" color=#32CD32> test </font>
+<p>
+    <font size="3" color=#32CD32> U</font>
+</p>
+
+<font size="6" color=#32CD32> &nbsp Create your Round Table Discussion </font>
+<hr width="1200px"/>
+
 <%= form_tag({:action => 'create'}, {:id => 'eventForm'}) do %>
+    
 	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
+    <p>
+    <font face = "Arial Black", Gadget, sans-serif size="5" color=black> &nbsp Title: &nbsp </font>
+    <input type="text" name="firstname">
+    </p>
+    <p>
+    <font face = "Arial Black", Gadget, sans-serif size="5" color=black> &nbsp Date and Time: </font>
 	<%= select_datetime(DateTime.current.in_time_zone, ampm: true, :prefix => :datetime) %><br>
-	<%= text_area(:event, :topic, :id => "eventTextField", :onchange => 'updateHiddenFieldsWithCurrentText()') %><br>
-	<%= submit_tag("Create Event") %>
+    </p>
+    <font face = "Arial Black", Gadget, sans-serif size="5" color=black> &nbsp Description: &nbsp </font><br>
+    <p>
+    <font>&nbsp&nbsp</font>
+	<%= text_area(:event, :topic, :id => "eventTextField", :style => "width: 1200px; height: 150px;", :onchange => 'updateHiddenFieldsWithCurrentText()', :placeholder => "Write description here.") %>
+    </p>
+    <p>
+    <font>&nbsp&nbsp</font>
+	<%= submit_tag("Create Event", :class => "button") %>
+    </p>
     <div id="eventError"></div>
 <% end %>
 
@@ -28,8 +49,15 @@
 <%= form_tag({:action => 'new'}, {:id => 'tagForm'}) do %>
     <%= hidden_field_tag(:currentEventTopic, @event.topic, :class => 'save-currentEventTopic') %>
 	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
-	<%= text_area(:tag, :name) %><br>
-	<%= submit_tag("Add Tag to Event") %>
+    <font face = "Arial Black", Gadget, sans-serif size="5" color=black> &nbsp Tags: &nbsp </font><br>
+    <p>
+    <font>&nbsp&nbsp</font>
+	<%= text_field(:tag, :name, :class => "tag_box", :placeholder => "Add tags here.", :size => 30) %>
+    </p>
+    <p>
+    <font>&nbsp&nbsp</font>
+	<%= submit_tag("Add Tag to Event", :class => "button") %>
+    </p>
     <div id="tagError"></div>
 <% end %>
 
@@ -92,3 +120,22 @@ $(document).ready(function () {
 
 });
 </script>
+
+<script type="text/json" class="json-inline" data-name="guiders2">{"exclusive-popover":{"roundtable":{"content":"\u4e0e\u9886\u57df\u8d44\u6df1\u5609\u5bbe\u540c\u5e2d\uff0c\u53c2\u4e0e\u4e13\u4e1a\u7cbe\u5f69\u7684\u4e3b\u9898\u8ba8\u8bba","dismissText":"\u77e5\u9053\u4e86","title":"\u77e5\u4e4e\u5706\u684c"}},"section":{},"editor":[]}</script>
+
+
+
+
+
+<script type="text/template" class="activate-dialog-template">
+
+<div class="link-activate-view clearfix">
+<div class="tip">为了正常使用知乎的提问、回答、评论和编辑功能，请验证你的邮箱。</div>
+<div class="describe">你绑定的邮箱如下，请查收邮件激活你的帐号</div>
+<div class="email">995903614@qq.com</div>
+<div class="actions">
+<a class="resend-activation-email zg-link-litblue-normal" href="#">重发激活邮件</a>
+<span class="zg-bull">·</span>
+<a class="zg-link-litblue-normal" href="/settings/account">修改邮箱</a>
+</div>
+</div>

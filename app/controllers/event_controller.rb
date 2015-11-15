@@ -110,11 +110,11 @@ class EventController < ApplicationController
     
     sleep(5)
     present = driver.find_elements(:css, "div.a-X-fe")
-    if present.length > 0:
+    if present.length > 0
         driver.find_element(:css, "div.a-X-fe").click #click the check box
         driver.find_element(:id, ":t0.Tj").click #click Okay I get it button
         driver.find_element(:id, ":t1.Et").click #click Join
-    
+    end
     return driver
   end
   
@@ -199,5 +199,5 @@ class EventController < ApplicationController
     address = link[:href].split('=') # gives for example /watch?v=tuV0fqh5jgQ, will have to use as https://www.youtube.com/watch?v=tuV0fqh5jgQ and we'll only store tuV0fqh5jgQ 
     return address[1]
   end
-  
+ 
 end
