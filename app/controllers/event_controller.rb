@@ -25,9 +25,7 @@ class EventController < ApplicationController
 		@event.tags << createTag(t)
 	end
 	@event.doc_link = createGoogleDoc(@event)
-    links = createGoogleHangoutOnAir(@event)
-	@event.hangout_view_link  = links[0]
-    @event.hangout_start_link = links[1]
+	@event.hangout_view_link = createGoogleHangoutOnAir(@event)
 	if @event.save!
       redirect_to action: "show", :id => @event.id
     else
@@ -49,53 +47,34 @@ class EventController < ApplicationController
   
   def start
     @event = Event.find(params[:id])
+   
+    driver = joinHangout('https://www.youtube.com/my_live_events', @event)
+  
+    driver.find_element(:xpath, "//div[@id=':sd.Pt']/div/div[2]/div").click #click the add people icon
+    boxWithJoinLink = driver.find_element(:id, ":ut.vt").click #find the box with the join link
+    joinLink = boxWithJoinLink[:value]
     
-    require 'capybara/poltergeist'
-    require 'capybara/rspec'
-    require 'capybara/rails'
+    driver.find_element(:id, ":uu.Ji").click #click the close button
+    driver.find_element(:id, ":t0.ak").click #click Start Broadcast
+    driver.find_element(:id, ":vn.Hk").click #click Okay
     
-    Capybara.register_driver :poltergeist do |app|
-        phantomJSdriver = Capybara::Poltergeist::Driver.new(app, {js_errors: false})
-        phantomJSdriver.headers = {"User-Agent" => "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0"}
-        phantomJSdriver
-    end
-
-    Capybara.default_max_wait_time = 5
-    session = Capybara::Session.new(:poltergeist)
-    
-    session.visit(@event.hangout_start_link)
-    session = joinHangout(session)
-    
-    session.find(:xpath, "//div[@id=':sd.Pt']/div/div[2]/div").click #click the add people icon
-    boxWithJoinLink = session.find(:id, ":vb.vt") #find the box with the join link
-    joinLink = boxWithJoinLink.value
-    session.find(:id, ":vc.Ji").click #click the close button
-    
-    session.find(:id, ":t4.ak").click #click Start Broadcast
-    session.find(:id, ":vn.Hk").click #click Okay
+    driver.quit
 
     @event.hangout_join_link = joinLink
     @event.save!
+
     redirect_to action: "show", :id => @event.id
   end
   
   def stop
     @event = Event.find(params[:id])
     
-    require 'capybara/poltergeist'
-    require 'capybara/rspec'
-    require 'capybara/rails'
-
-    Capybara.default_max_wait_time = 5
-    session = Capybara::Session.new(:poltergeist)
-    
-    session.visit(@event.hangout_join_link)
-    session = joinHangout(session)
-    
-    session.find(:id, ":t4.ak").click #click Stop Broadcast
+    driver = joinHangout(@event.hangout_join_link, @event)
+    driver.find_element(:id, ":t4.ak").click #click Stop Broadcast
     
     @event.endTime = DateTime.current
     @event.save!
+    
     redirect_to action: "show", :id => @event.id
   end
   
@@ -108,29 +87,35 @@ class EventController < ApplicationController
 	params.require(:tag).permit(:name)
   end
   
-  def joinHangout(session)
-    #Capybara.page.driver.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0")
-    #Capybara.page.driver.headers = {"User-Agent" => "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0"}
+  def joinHangout(link, event = nil)
+    require 'selenium-webdriver'
     
-    session.fill_in('Email', :with => 'gtcscapstone@gmail.com')
-    session.click_button('next')
+    profile = Selenium::WebDriver::Firefox::Profile.new()
+    profile['plugin.state.npgoogletalk'] = 2
+    profile['plugin.state.npo1d']        = 2
+    driver = Selenium::WebDriver.for(:firefox, :profile => profile)
     
-    #p session.response_headers
+    driver.get(link)
+    driver.find_element(:id, "Email").clear
+    driver.find_element(:id, "Email").send_keys "gtcscapstone@gmail.com"
+    driver.find_element(:id, "next").click
     
-    #Capybara.page.driver.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0")
+    driver.find_element(:id, "Passwd").clear
+    driver.find_element(:id, "Passwd").send_keys get_secret('GoogleAccountPassword')
+    driver.find_element(:id, "signIn").click
     
-    session.fill_in('Passwd', :with => get_secret('GoogleAccountPassword'))
-    session.click_button('signIn')
+    if not event.nil?
+        driver.find_element(:xpath, '//*[@data-video-id="' + event.hangout_view_link + '"]').click
+    end
     
-    #p session.response_headers
+    sleep(5)
+    present = driver.find_elements(:css, "div.a-X-fe")
+    if present.length > 0:
+        driver.find_element(:css, "div.a-X-fe").click #click the check box
+        driver.find_element(:id, ":t0.Tj").click #click Okay I get it button
+        driver.find_element(:id, ":t1.Et").click #click Join
     
-    sleep(10)
-    session.save_screenshot('line116.png', :full => true)
-    session.find(:css, "div.a-X-fe").click #click the check box
-    session.find(:id, ":t0.Tj").click #click Okay I get it button
-    session.find(:id, ":t0.Tj").click #click Okay I get it button
-    session.find(:id, ":t1.Et").click #click Join
-    return session
+    return driver
   end
   
   def createGoogleDoc(event)
@@ -212,15 +197,7 @@ class EventController < ApplicationController
     end
     
     address = link[:href].split('=') # gives for example /watch?v=tuV0fqh5jgQ, will have to use as https://www.youtube.com/watch?v=tuV0fqh5jgQ and we'll only store tuV0fqh5jgQ 
-    viewLink = address[1]
-    
-    #session.save_screenshot('line200.png', :full => true)
-    startBroadcastButton = session.find(:xpath, '//*[@data-video-id="' + viewLink + '"]')
-    startLinkPortion = startBroadcastButton[:"data-token"]
-    startLink = 'https://plus.google.com/hangouts/_/ytl/' + startLinkPortion + '?eid=112363874857852707319&hl=en_US&authuser=0'
-    
-    startBroadcastButton.click
-    return [viewLink, startLink]
+    return address[1]
   end
   
 end
