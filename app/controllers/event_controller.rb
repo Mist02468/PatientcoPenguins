@@ -25,7 +25,9 @@ class EventController < ApplicationController
 		@event.tags << createTag(t)
 	end
 	@event.doc_link = createGoogleDoc(@event)
-	@event.hangout_view_link = createGoogleHangoutOnAir(@event)
+    links = createGoogleHangoutOnAir(@event)
+    @event.hangout_view_link = links[0]
+    @event.hangout_join_link = links[1]
 	if @event.save!
       redirect_to action: "show", :id => @event.id
     else
@@ -35,10 +37,11 @@ class EventController < ApplicationController
   
   def show
     @event = Event.find(params[:id])
+
     @user  = User.find(session[:user_id])
     if not @event.endTime.nil?
         @status = 'finished'
-    elsif not @event.hangout_join_link.nil?
+    elsif not @event.hangout_start_link.nil?
         @status = 'live'
     else
         @status = 'scheduled'
@@ -47,8 +50,8 @@ class EventController < ApplicationController
   
   def start
     @event = Event.find(params[:id])
-   
-    driver = joinHangout('https://www.youtube.com/my_live_events', @event)
+    
+    driver = joinHangout(@event)
     
     #el = driver.find_element(:xpath, "//div[@id=':sd.Pt']/div/div[2]/div")
     #driver.action.context_click(el).perform
@@ -68,9 +71,9 @@ class EventController < ApplicationController
     driver.find_element(:id, ":t0.ak").click #click Start Broadcast
     driver.find_element(:id, ":ur.Hk").click #click Okay
     
-    driver.quit
+    #driver.quit
 
-    @event.hangout_join_link = 'testing'
+    @event.hangout_start_link = 'testing'
     #@event.hangout_join_link = joinLink
     @event.save!
 
@@ -80,8 +83,10 @@ class EventController < ApplicationController
   def stop
     @event = Event.find(params[:id])
     
-    driver = joinHangout(@event.hangout_join_link, @event)
-    driver.find_element(:id, ":t4.ak").click #click Stop Broadcast
+    driver = joinHangout(@event)
+    driver.find_element(:id, ":t7.ak").click #click Stop Broadcast
+    
+    driver.quit
     
     @event.endTime = DateTime.current
     @event.save!
@@ -98,7 +103,7 @@ class EventController < ApplicationController
 	params.require(:tag).permit(:name)
   end
   
-  def joinHangout(link, event = nil)
+  def joinHangout(event, isStart = false)
     require 'selenium-webdriver'
     
     profile = Selenium::WebDriver::Firefox::Profile.new()
@@ -107,7 +112,12 @@ class EventController < ApplicationController
     driver = Selenium::WebDriver.for(:firefox, :profile => profile)
     driver.manage.timeouts.implicit_wait = 5 # seconds
     
-    driver.get(link)
+    if isStart
+        driver.get('https://www.youtube.com/my_live_events?filter=scheduled')
+    else
+        driver.get(event.hangout_join_link)
+    end
+    
     driver.find_element(:id, "Email").clear
     driver.find_element(:id, "Email").send_keys "gtcscapstone@gmail.com"
     driver.find_element(:id, "next").click
@@ -116,19 +126,20 @@ class EventController < ApplicationController
     driver.find_element(:id, "Passwd").send_keys get_secret('GoogleAccountPassword')
     driver.find_element(:id, "signIn").click
     
-    if not event.nil?
+    if isStart
         driver.find_element(:xpath, '//*[@data-video-id="' + event.hangout_view_link + '"]').click
+        sleep(5)
+        
+        openWindows = driver.window_handles
+        driver.switch_to.window(openWindows[1])
     end
-    
-    openWindows = driver.window_handles
-    driver.switch_to.window(openWindows[1])
     
     sleep(5)
     present = driver.find_elements(:css, "div.a-X-fe")
     if present.length > 0
         driver.find_element(:css, "div.a-X-fe").click #click the check box
-        driver.find_element(:id, ":t0.Tj").click #click Okay I get it button
-        driver.find_element(:id, ":t1.Et").click #click Join
+        driver.find_element(:id, ":t3.Tj").click #click Okay I get it button
+        driver.find_element(:id, ":t4.Et").click #click Join
     end
     
     return driver
@@ -213,7 +224,13 @@ class EventController < ApplicationController
     end
     
     address = link[:href].split('=') # gives for example /watch?v=tuV0fqh5jgQ, will have to use as https://www.youtube.com/watch?v=tuV0fqh5jgQ and we'll only store tuV0fqh5jgQ 
-    return address[1]
+    viewLink = address[1]
+    
+    startBroadcastButton = session.find(:xpath, '//*[@data-video-id="' + viewLink + '"]')
+    joinLinkPortion = startBroadcastButton[:"data-token"]
+    joinLink = 'https://plus.google.com/hangouts/_/ytl/' + joinLinkPortion + '?eid=112363874857852707319&hl=en_US&authuser=0'
+    
+    return [viewLink, joinLink]
   end
  
 end
