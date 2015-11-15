@@ -201,5 +201,5 @@ class EventController < ApplicationController
     address = link[:href].split('=') # gives for example /watch?v=tuV0fqh5jgQ, will have to use as https://www.youtube.com/watch?v=tuV0fqh5jgQ and we'll only store tuV0fqh5jgQ 
     return address[1]
   end
-  
+ 
 end
