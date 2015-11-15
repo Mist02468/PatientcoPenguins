@@ -49,18 +49,29 @@ class EventController < ApplicationController
     @event = Event.find(params[:id])
    
     driver = joinHangout('https://www.youtube.com/my_live_events', @event)
-  
-    driver.find_element(:xpath, "//div[@id=':sd.Pt']/div/div[2]/div").click #click the add people icon
-    boxWithJoinLink = driver.find_element(:id, ":ut.vt").click #find the box with the join link
-    joinLink = boxWithJoinLink[:value]
     
-    driver.find_element(:id, ":uu.Ji").click #click the close button
+    #el = driver.find_element(:xpath, "//div[@id=':sd.Pt']/div/div[2]/div")
+    #driver.action.context_click(el).perform
+    
+    #peopleIconArea = driver.find_element(:id, ':sd.Pt')
+    #driver.action.move_to(peopleIconArea).perform
+    #driver.find_element(:xpath, "//div[@id=':sd.Pt']/div/div[2]/div").click #click the add people icon
+    
+    #driver.find_element(:css, "div.a-b:nth-child(2)").click #click the add people icon
+    #driver.find_element(:css, "div.ha-w-D-f").click #click the add people icon
+    
+    #boxWithJoinLink = driver.find_element(:id, ":ut.vt").click #find the box with the join link
+    #joinLink = boxWithJoinLink[:value]
+    
+    #driver.find_element(:id, ":uu.Ji").click #click the close button
+    #driver.find_element(:id, ":t3.lk")
     driver.find_element(:id, ":t0.ak").click #click Start Broadcast
-    driver.find_element(:id, ":vn.Hk").click #click Okay
+    driver.find_element(:id, ":ur.Hk").click #click Okay
     
     driver.quit
 
-    @event.hangout_join_link = joinLink
+    @event.hangout_join_link = 'testing'
+    #@event.hangout_join_link = joinLink
     @event.save!
 
     redirect_to action: "show", :id => @event.id
@@ -108,6 +119,9 @@ class EventController < ApplicationController
     if not event.nil?
         driver.find_element(:xpath, '//*[@data-video-id="' + event.hangout_view_link + '"]').click
     end
+    
+    openWindows = driver.window_handles
+    driver.switch_to.window(openWindows[1])
     
     sleep(5)
     present = driver.find_elements(:css, "div.a-X-fe")
