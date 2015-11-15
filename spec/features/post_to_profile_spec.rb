@@ -22,8 +22,8 @@ describe "PostToProfileSpec" do
     @driver = TestCommonFunctions.login(@base_url, @driver)
     
     @driver.find_element(:link, "Create Post").click
-    @driver.find_element(:id, "post_text").clear
-    @driver.find_element(:id, "post_text").send_keys "Hello"
+    @driver.find_element(:id, "postTextField").clear
+    @driver.find_element(:id, "postTextField").send_keys "Hello"
     @driver.find_element(:xpath, "(//input[@name='commit'])[2]").click
     @driver.find_element(:link, "GT Capstone").click
     verify { (@driver.find_element(:xpath, "//font[4]").text).should == "gtcscapstone@gmail.com" }

@@ -24,17 +24,18 @@ describe "EventCreationSpec" do
     @driver.find_element(:link, "Create Event").click
     
     uniqueTopicName = DateTime.new
-    @driver.find_element(:id, "event_topic").clear
-    @driver.find_element(:id, "event_topic").send_keys "Test Event " + uniqueTopicName.to_s
+    @driver.find_element(:id, "eventTextField").clear
+    @driver.find_element(:id, "eventTextField").send_keys "Test Event " + uniqueTopicName.to_s
     Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, "datetime_month")).select_by(:text, "December")
     Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, "datetime_day")).select_by(:text, "25")
-    Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, "datetime_hour")).select_by(:text, "07")
+    Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, "datetime_hour")).select_by(:text, "07 AM")
     Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, "datetime_minute")).select_by(:text, "35")
     @driver.find_element(:name, "commit").click
     
-    verify { (@driver.find_element(:css, "p").text).should == "Event Topic: " + "Test Event " + uniqueTopicName.to_s }
-    verify { (@driver.find_element(:xpath, "//p[2]").text).should == "Event Time: 2015-12-25 07:35:00 UTC" }
-    verify { (@driver.find_element(:xpath, "//p[3]").text).should == "Event Host: GT Capstone" }
+    verify { (@driver.find_element(:css, "p").text).should == "You're invited by GT Capstone:" }
+    verify { (@driver.find_element(:link, "GT Capstone").text).should == "GT Capstone" }
+    verify { (@driver.find_element(:css, "p.eventInfo").text).should == "Test Event " + uniqueTopicName.to_s + " Roundtable Discussion" }
+    verify { (@driver.find_element(:css, "h3").text).should == "on 12/25/2015 at 07:35AM" }
   end
   
   def element_present?(how, what)

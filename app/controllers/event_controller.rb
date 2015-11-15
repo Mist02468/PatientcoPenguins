@@ -4,7 +4,15 @@ class EventController < ApplicationController
   
   def new
     @event = Event.new
-    @tagsToAdd = []
+    if params[:tag].present?
+        @event.topic = params[:currentEventTopic]
+        addTag()
+    elsif params[:tagToRemove].present?
+        @event.topic = params[:currentEventTopic]
+        removeTag()
+    else
+        @tagsToAdd = []
+    end
   end
   
   def create
@@ -17,7 +25,7 @@ class EventController < ApplicationController
 		@event.tags << createTag(t)
 	end
 	@event.doc_link = createGoogleDoc(@event)
-	@event.hangout_link = createGoogleHangoutOnAir(@event)
+	@event.hangout_view_link = createGoogleHangoutOnAir(@event)
 	if @event.save!
       redirect_to action: "show", :id => @event.id
     else
@@ -27,33 +35,87 @@ class EventController < ApplicationController
   
   def show
     @event = Event.find(params[:id])
-    if @event.startTime.in_time_zone.to_i > DateTime.now.in_time_zone.to_i
-        @status = 'scheduled'
-    elsif not @event.endTime.nil?
+    @user  = User.find(session[:user_id])
+    if not @event.endTime.nil?
         @status = 'finished'
-    else
+    elsif not @event.hangout_join_link.nil?
         @status = 'live'
+    else
+        @status = 'scheduled'
     end
   end
   
-  def addTag
-    @event = Event.new
-    @event.topic = params[:currentEventTopic]
-	@tagsToAdd = params[:tagsToAdd].split(" ")
-    if (@tagsToAdd.include? tag_params['name']) == false
-        @tagsToAdd << tag_params['name']
-    end
-	render "new"
-  end
+  def start
+    @event = Event.find(params[:id])
+   
+    driver = joinHangout('https://www.youtube.com/my_live_events', @event)
+  
+    driver.find_element(:xpath, "//div[@id=':sd.Pt']/div/div[2]/div").click #click the add people icon
+    boxWithJoinLink = driver.find_element(:id, ":ut.vt").click #find the box with the join link
+    joinLink = boxWithJoinLink[:value]
+    
+    driver.find_element(:id, ":uu.Ji").click #click the close button
+    driver.find_element(:id, ":t0.ak").click #click Start Broadcast
+    driver.find_element(:id, ":vn.Hk").click #click Okay
+    
+    driver.quit
 
-  def join
-  end
+    @event.hangout_join_link = joinLink
+    @event.save!
 
-  def invite
-	if params[:userId].present?
-      puts "Successful"
-    else
+    redirect_to action: "show", :id => @event.id
+  end
+  
+  def stop
+    @event = Event.find(params[:id])
+    
+    driver = joinHangout(@event.hangout_join_link, @event)
+    driver.find_element(:id, ":t4.ak").click #click Stop Broadcast
+    
+    @event.endTime = DateTime.current
+    @event.save!
+    
+    redirect_to action: "show", :id => @event.id
+  end
+  
+  private
+  def event_params
+    params.require(:event).permit(:topic)
+  end
+  
+  def tag_params
+	params.require(:tag).permit(:name)
+  end
+  
+  def joinHangout(link, event = nil)
+    require 'selenium-webdriver'
+    
+    profile = Selenium::WebDriver::Firefox::Profile.new()
+    profile['plugin.state.npgoogletalk'] = 2
+    profile['plugin.state.npo1d']        = 2
+    driver = Selenium::WebDriver.for(:firefox, :profile => profile)
+    
+    driver.get(link)
+    driver.find_element(:id, "Email").clear
+    driver.find_element(:id, "Email").send_keys "gtcscapstone@gmail.com"
+    driver.find_element(:id, "next").click
+    
+    driver.find_element(:id, "Passwd").clear
+    driver.find_element(:id, "Passwd").send_keys get_secret('GoogleAccountPassword')
+    driver.find_element(:id, "signIn").click
+    
+    if not event.nil?
+        driver.find_element(:xpath, '//*[@data-video-id="' + event.hangout_view_link + '"]').click
     end
+    
+    sleep(5)
+    present = driver.find_elements(:css, "div.a-X-fe")
+    if present.length > 0:
+        driver.find_element(:css, "div.a-X-fe").click #click the check box
+        driver.find_element(:id, ":t0.Tj").click #click Okay I get it button
+        driver.find_element(:id, ":t1.Et").click #click Join
+    
+    return driver
   end
   
   def createGoogleDoc(event)
@@ -133,27 +195,9 @@ class EventController < ApplicationController
             j += 1
         end
     end
+    
     address = link[:href].split('=') # gives for example /watch?v=tuV0fqh5jgQ, will have to use as https://www.youtube.com/watch?v=tuV0fqh5jgQ and we'll only store tuV0fqh5jgQ 
     return address[1]
   end
   
-  private
-  def event_params
-    params.require(:event).permit(:topic)
-  end
-  def tag_params
-	params.require(:tag).permit(:name)
-  end
-  
-  def createTag(tagName)
-	found_tag = Tag.where(:name => tagName).first
-	if found_tag == nil
-		tag = Tag.new()
-		tag.name = tagName
-		tag.save
-	else
-		tag = found_tag
-	end
-	return tag
-  end
 end

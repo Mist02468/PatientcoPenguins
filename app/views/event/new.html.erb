@@ -2,21 +2,31 @@
 <%= form_tag({:action => 'create'}, {:id => 'eventForm'}) do %>
 	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
 	<%= select_datetime(DateTime.current.in_time_zone, ampm: true, :prefix => :datetime) %><br>
-	<%= text_area(:event, :topic, :onchange => 'document.getElementById("save-currentEventTopic").value = this.value') %><br>
+	<%= text_area(:event, :topic, :id => "eventTextField", :onchange => 'updateHiddenFieldsWithCurrentText()') %><br>
 	<%= submit_tag("Create Event") %>
     <div id="eventError"></div>
 <% end %>
 
-<table>
+<ul>
   <% @tagsToAdd.each do |t| %>
-    <tr>
-      <td><%= t %></td>
-    </tr>
+    <li class="tag">
+        <div style="float:left;">
+            <%= t %>
+        </div>
+        <div style="float:left;">
+            <%= form_tag({:action => 'new'}) do %>
+                <%= hidden_field_tag(:currentEventTopic, @event.topic, :class => 'save-currentEventTopic') %>
+                <%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
+                <%= hidden_field_tag(:tagToRemove, t) %>
+                <%= submit_tag("x", :class => "button deleteButton") %>
+            <% end %>
+        </div>
+    </li>
   <% end %>
-</table>
+</ul>
 
-<%= form_tag({:action => 'addTag'}, {:id => 'tagForm'}) do %>
-    <%= hidden_field_tag(:currentEventTopic, @event.topic, :id => 'save-currentEventTopic') %>
+<%= form_tag({:action => 'new'}, {:id => 'tagForm'}) do %>
+    <%= hidden_field_tag(:currentEventTopic, @event.topic, :class => 'save-currentEventTopic') %>
 	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
 	<%= text_area(:tag, :name) %><br>
 	<%= submit_tag("Add Tag to Event") %>
@@ -24,6 +34,12 @@
 <% end %>
 
 <script>
+function updateHiddenFieldsWithCurrentText() {
+    $(".save-currentEventTopic").each(function() {
+        $(this).val($("#eventTextField").val())
+    });
+}
+
 $(document).ready(function () {
 
     $.validator.addMethod('tagHasNoSpaces', function (value) {
@@ -45,6 +61,17 @@ $(document).ready(function () {
                 }
             }
     })
+    
+    $.validator.addMethod('mustChooseFutureDateTime', function (value) {
+        var inputDateTime   = new Date($("#datetime_year").val(), $("#datetime_month").val() - 1, $("#datetime_day").val(), $("#datetime_hour").val(), $("#datetime_minute").val(), 0, 0);
+        var currentDateTime = new Date();
+        currentDateTime.setMinutes(currentDateTime.getMinutes() + 5);
+        if (inputDateTime > currentDateTime) {
+            return true;
+        } else {
+            return false;
+        }
+    }, 'Please enter a time at least 5 minutes in the future');
 
     $("#eventForm").validate({
             onkeyup: false,
@@ -53,7 +80,8 @@ $(document).ready(function () {
             errorElement:'div',
             errorLabelContainer: '#eventError',
             rules: {
-                "event[topic]": {required: true}
+                "event[topic]": {required: true},
+                "datetime[minute]": {mustChooseFutureDateTime: true}
             },
             messages: {
                 "event[topic]": {
