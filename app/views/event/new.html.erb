@@ -1,32 +1,26 @@
-<p>
-    <font size="3" color=#32CD32> U</font>
-</p>
+<%= stylesheet_link_tag('event.scss') %>
 
-<font size="6" color=#32CD32> &nbsp Create your Round Table Discussion </font>
-<hr width="1200px"/>
-
-<%= form_tag({:action => 'create'}, {:id => 'eventForm'}) do %>
-    
+<div class = "eventDiv">
+<h2>Create your Round Table Discussion</h2>
+<%= form_tag({:action => 'new'}, {:id => 'tagForm'}) do %>
+    <%= hidden_field_tag(:currentEventTopic, @event.topic, :class => 'save-currentEventTopic') %>
 	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
-    <p>
-    <font face = "Arial Black", Gadget, sans-serif size="5" color=black> &nbsp Title: &nbsp </font>
-    <input type="text" name="firstname">
-    </p>
-    <p>
-    <font face = "Arial Black", Gadget, sans-serif size="5" color=black> &nbsp Date and Time: </font>
+	<%= text_field(:tag, :name, :class => "tag_box", :placeholder => "Add tags here.", :size => 30) %>
+	<%= submit_tag("Add Tag to Event", :class => "button") %>
+    <div id="tagError"></div>
+<% end %>
+<br>
+<%= form_tag({:action => 'create'}, {:id => 'eventForm'}) do %>
+	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
+    <font face = "Arial Black", Gadget, sans-serif size="2" color=black> Date and Time: </font>
 	<%= select_datetime(DateTime.current.in_time_zone, ampm: true, :prefix => :datetime) %><br>
-    </p>
-    <font face = "Arial Black", Gadget, sans-serif size="5" color=black> &nbsp Description: &nbsp </font><br>
-    <p>
-    <font>&nbsp&nbsp</font>
-	<%= text_area(:event, :topic, :id => "eventTextField", :style => "width: 1200px; height: 150px;", :onchange => 'updateHiddenFieldsWithCurrentText()', :placeholder => "Write description here.") %>
-    </p>
-    <p>
-    <font>&nbsp&nbsp</font>
-	<%= submit_tag("Create Event", :class => "button") %>
-    </p>
+    <br>
+	<%= text_area(:event, :topic, :id => "eventTextField", :class => "text_field", :onchange => 'updateHiddenFieldsWithCurrentText()', :placeholder => "Write description here.") %>
+    <br>
+	<%= submit_tag("Create Event", :class => "button_submit") %>
     <div id="eventError"></div>
 <% end %>
+</div>
 
 <ul>
   <% @tagsToAdd.each do |t| %>
@@ -46,20 +40,6 @@
   <% end %>
 </ul>
 
-<%= form_tag({:action => 'new'}, {:id => 'tagForm'}) do %>
-    <%= hidden_field_tag(:currentEventTopic, @event.topic, :class => 'save-currentEventTopic') %>
-	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
-    <font face = "Arial Black", Gadget, sans-serif size="5" color=black> &nbsp Tags: &nbsp </font><br>
-    <p>
-    <font>&nbsp&nbsp</font>
-	<%= text_field(:tag, :name, :class => "tag_box", :placeholder => "Add tags here.", :size => 30) %>
-    </p>
-    <p>
-    <font>&nbsp&nbsp</font>
-	<%= submit_tag("Add Tag to Event", :class => "button") %>
-    </p>
-    <div id="tagError"></div>
-<% end %>
 
 <script>
 function updateHiddenFieldsWithCurrentText() {
