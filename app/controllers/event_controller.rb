@@ -51,7 +51,7 @@ class EventController < ApplicationController
   def start
     @event = Event.find(params[:id])
     
-    driver = joinHangout(@event)
+    driver = joinHangout(@event, true)
     
     #el = driver.find_element(:xpath, "//div[@id=':sd.Pt']/div/div[2]/div")
     #driver.action.context_click(el).perform
@@ -87,6 +87,9 @@ class EventController < ApplicationController
     driver.find_element(:id, ":t7.ak").click #click Stop Broadcast
     
     driver.quit
+    if request.host_with_port != 'localhost:3000'
+        @headless.destroy
+    end
     
     @event.endTime = DateTime.current
     @event.save!
@@ -105,6 +108,12 @@ class EventController < ApplicationController
   
   def joinHangout(event, isStart = false)
     require 'selenium-webdriver'
+    
+    if request.host_with_port != 'localhost:3000'
+        require 'headless'
+        @headless = Headless.new
+        @headless.start
+    end
     
     profile = Selenium::WebDriver::Firefox::Profile.new()
     profile['plugin.state.npgoogletalk'] = 2

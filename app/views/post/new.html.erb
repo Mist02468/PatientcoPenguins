@@ -5,7 +5,7 @@
 	<%= form_tag({:action => 'new'}, {:id => 'tagForm'}) do %>
         <%= hidden_field_tag(:currentPostText, @post.text, :class => 'save-currentPostText') %>
 		<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
-		<%= text_field(:tag, :name, :placeholder => "tag me!", :class => "tag_box") %>
+		<%= text_field(:tag, :name, :placeholder => "type tag here", :size => 20, :class => "tag_box") %>
 		<%= submit_tag("Add Tag to Post", :class => "button") %>
         <div id="tagError"></div>
 	<% end %>
@@ -26,7 +26,8 @@
                 </li>
 		<% end %>
 	</ul>
-</br>
+<br>
+<br>
 	<%= form_tag({:action => 'create'}, {:id => 'postForm'}) do %>
 		<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
 		<%= text_area(:post, :text, :id => "postTextField", :class => "text_field", :placeholder => "write post here", :onchange => "updateHiddenFieldsWithCurrentText()") %><br>
