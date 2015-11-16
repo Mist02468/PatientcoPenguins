@@ -38,7 +38,7 @@
         <% if @status == 'live' %>
             <%= link_to "Join the Discussion", @event.hangout_join_link, :target => "_blank" %>
         <% end %>
-        <iframe height="315px" width="560px" src="https://www.youtube.com/embed/<%= @event.hangout_link %>"></iframe>
+        <iframe height="315px" width="560px" src="https://www.youtube.com/embed/<%= @event.hangout_view_link %>"></iframe>
     </div>
         
     <div width="50%" style="float:right;">

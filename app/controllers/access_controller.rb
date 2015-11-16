@@ -9,20 +9,22 @@ class AccessController < ApplicationController
 
   def startLinkedInAuth
     require 'oauth2'
+    
+    puts 'here'
+      puts request.host_with_port
 
     client = OAuth2::Client.new('75yetg1f8atx89', 'le39CGDc1yQLCo9U', :site => 'https://www.linkedin.com/', :authorize_url => '/uas/oauth2/authorization')
 
-	redirect_to client.auth_code.authorize_url(:redirect_uri => 'http://localhost:3000/access/finishLinkedInAuth') + '&state=' + getRandomState + '&scope=r_basicprofile%20r_emailaddress'
+	redirect_to client.auth_code.authorize_url(:redirect_uri => request.protocol + request.host_with_port + '/access/finishLinkedInAuth') + '&state=' + getRandomState + '&scope=r_basicprofile%20r_emailaddress'
   end
 
   def finishLinkedInAuth
     require 'oauth2'
 
     if params[:code].present? && params[:state].present?
-      puts "Successful"
 
       client = OAuth2::Client.new('75yetg1f8atx89', 'le39CGDc1yQLCo9U', :site => 'https://www.linkedin.com/', :token_url => '/uas/oauth2/accessToken')
-      token = client.auth_code.get_token(params[:code], :redirect_uri => 'http://localhost:3000/access/finishLinkedInAuth')
+      token = client.auth_code.get_token(params[:code], :redirect_uri => request.protocol + request.host_with_port + '/access/finishLinkedInAuth')
 
       response = token.get('https://api.linkedin.com/v1/people/~:(first-name,last-name,location,industry,num-connections,positions,email-address,id)?format=json', :headers => { 'authorization' => 'Bearer ' + token.token })
       response = ActiveSupport::JSON.decode(response.response.env['body'])
