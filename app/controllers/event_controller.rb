@@ -26,12 +26,14 @@ class EventController < ApplicationController
 	end
 	@event.doc_link = createGoogleDoc(@event)
     links = createGoogleHangoutOnAir(@event)
-    @event.hangout_view_link = links[0]
-    @event.hangout_join_link = links[1]
-	if @event.save!
-      redirect_to action: "show", :id => @event.id
-    else
-      redirect_to action: 'new'
+    if links != nil
+        @event.hangout_view_link = links[0]
+        @event.hangout_join_link = links[1]
+        if @event.save!
+          redirect_to action: "show", :id => @event.id
+        else
+          redirect_to action: 'new'
+        end
     end
   end
   
@@ -95,6 +97,13 @@ class EventController < ApplicationController
     @event.save!
     
     redirect_to action: "show", :id => @event.id
+  end
+  
+  def error
+    if params[:exceptionMessage].present? and params[:exceptionImageFile].present?
+        @exceptionMessage   = params[:exceptionMessage]
+        @exceptionImageFile = params[:exceptionImageFile]
+    end
   end
   
   private
@@ -191,39 +200,39 @@ class EventController < ApplicationController
     require 'capybara/rails'
 
     Capybara.default_max_wait_time = 5
-    session = Capybara::Session.new(:poltergeist)
+    @session = Capybara::Session.new(:poltergeist)
     
-    session.visit('https://accounts.google.com/ServiceLogin?passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26feature%3Dredirect_login%26next%3D%252Fmy_live_events%253Faction_create_live_event%253D1%26hl%3Den&service=youtube&uilel=3&hl=en')
-    session.fill_in('Email', :with => 'gtcscapstone@gmail.com')
-    session.click_button('next')
-    
-    session.fill_in('Passwd', :with => get_secret('GoogleAccountPassword'))
-    session.click_button('signIn')
-    # TODO, make these fail better
-    #session.save_screenshot('rightAfterSignIn.png', :full => true)
-    session.find('#title') # let the next page load
-    #session.save_screenshot('afterSFindWaiting.png', :full => true)
+    begin
+        @session.visit('https://accounts.google.com/ServiceLogin?passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26feature%3Dredirect_login%26next%3D%252Fmy_live_events%253Faction_create_live_event%253D1%26hl%3Den&service=youtube&uilel=3&hl=en')
+        @session.fill_in('Email', :with => 'gtcscapstone@gmail.com')
+        @session.click_button('next')
+        
+        @session.fill_in('Passwd', :with => get_secret('GoogleAccountPassword'))
+        @session.click_button('signIn')
+        @session.find('#title') # let the next page load
 
-    session.fill_in('title', :with => event.topic)
-    script = 'document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].removeAttribute("readonly"); document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].value = "' + event.startTime.in_time_zone.strftime("%b %e, %Y") + '";'
-    session.execute_script(script)
-    session.find(:xpath, '//input[@class="yt-uix-form-input-text"]').set(event.startTime.in_time_zone.strftime("%l:%M %p"))
-    session.select('Unlisted', :from => 'privacy')
-    session.first(:xpath, '//*[@class="save-cancel-buttons"]').click
+        @session.fill_in('title', :with => event.topic)
+        script = 'document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].removeAttribute("readonly"); document.getElementsByClassName("yt-uix-form-input-text time-range-date time-range-compact")[0].value = "' + event.startTime.in_time_zone.strftime("%b %e, %Y") + '";'
+        @session.execute_script(script)
+        @session.find(:xpath, '//input[@class="yt-uix-form-input-text"]').set(event.startTime.in_time_zone.strftime("%l:%M %p"))
+        @session.select('Unlisted', :from => 'privacy')
+        @session.first(:xpath, '//*[@class="save-cancel-buttons"]').click
+        
+        @session.find('#creator-subheader-text') # let the next page load
+        
+        @links = @session.all('a', :text => event.topic)
     
-    #session.save_screenshot('rightAfterCreate.png', :full => true)
-    session.find('#creator-subheader-text') # let the next page load
-    #session.save_screenshot('afterCFindWaiting.png', :full => true)
-    
-    #for debugging: session.save_screenshot('here1.png', :full => true)
-    
-    links = session.all('a', :text => event.topic)
-    if links.count() == 1
-        link = links.first()
+    rescue Exception => e
+        showDebuggingErrorPage(e, @session)
+        return
+    end
+        
+    if @links.count() == 1
+        link = @links.first()
     else
         numPrevSameTopicEvents = Event.where(topic: event.topic).where('startTime >= :today_date_time', {today_date_time: DateTime.current.utc}).where('startTime < :new_event_date_time', {new_event_date_time: event.startTime.utc}).count
         j = 0
-        links.each do |l|
+        @links.each do |l|
             if j == numPrevSameTopicEvents
                 link = l
                 break
@@ -235,11 +244,23 @@ class EventController < ApplicationController
     address = link[:href].split('=') # gives for example /watch?v=tuV0fqh5jgQ, will have to use as https://www.youtube.com/watch?v=tuV0fqh5jgQ and we'll only store tuV0fqh5jgQ 
     viewLink = address[1]
     
-    startBroadcastButton = session.find(:xpath, '//*[@data-video-id="' + viewLink + '"]')
+    begin
+        startBroadcastButton = @session.find(:xpath, '//*[@data-video-id="' + viewLink + '"]')
+    rescue Exception => e
+        showDebuggingErrorPage(e, @session)
+        return
+    end
+        
     joinLinkPortion = startBroadcastButton[:"data-token"]
     joinLink = 'https://plus.google.com/hangouts/_/ytl/' + joinLinkPortion + '?eid=112363874857852707319&hl=en_US&authuser=0'
     
     return [viewLink, joinLink]
+  end
+  
+  def showDebuggingErrorPage(exception, session)
+    exceptionImageFile = Rails.root.join('app', 'assets', 'images', 'error.png')
+    session.save_screenshot(exceptionImageFile, :full => true)
+    redirect_to action: "error", :exceptionMessage => exception.message, :exceptionImageFile => exceptionImageFile
   end
  
 end
