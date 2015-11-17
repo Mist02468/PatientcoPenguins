@@ -28,6 +28,7 @@
 	</ul>
 <br>
 <br>
+<br>
 	<%= form_tag({:action => 'create'}, {:id => 'postForm'}) do %>
 		<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
 		<%= text_area(:post, :text, :id => "postTextField", :class => "text_field", :placeholder => "write post here", :onchange => "updateHiddenFieldsWithCurrentText()") %><br>
