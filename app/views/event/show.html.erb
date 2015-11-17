@@ -24,9 +24,15 @@
     
     <% if @user.id == @event.host.id %>
         <% if @status == 'scheduled' %>
-            <%= button_to "Start this Event", {action: 'start', id: @event.id}, class: "button" %>
+	    <br>
+	    <div class="center">
+            	<%= button_to "Start this Event", {action: 'start', id: @event.id}, class: "button" %>
+	    </div>
         <% elsif @status == 'live' %>
-            <%= button_to "End this Event", {action: 'stop', id: @event.id}, class: "button" %>
+	    <br>
+	    <div class="center">
+            	<%= button_to "End this Event", {action: 'stop', id: @event.id}, class: "button" %>
+	    </div>
         <% end %>
     <% end %>
 </div>
