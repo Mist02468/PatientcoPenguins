@@ -105,7 +105,7 @@ a {
 #fl_menu .label{
   padding-left:20px;
   line-height:50px;
-  font-family:"Arial Black",Arial, Helvetica, sans-serif;
+  font-family:sans-serif;
   font-size:14px;
   font-weight:bold;
   background:green;
@@ -121,7 +121,7 @@ a {
   color:#bbb;
   border-top:1px solid #333;
   padding:10px 20px;
-  font-family:Arial, Helvetica, sans-serif;
+  font-family:sans-serif;
   font-size:12px;
   text-decoration:none;
 }

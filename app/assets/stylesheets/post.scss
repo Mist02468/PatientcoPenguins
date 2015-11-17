@@ -9,6 +9,12 @@ p {
 table {
   clear: left;
 }
+textarea {
+    font-family: sans-serif;
+}
+input {
+    font-family: sans-serif;
+}
 .postDiv {
   margin:auto;
   max-width: 500px;
@@ -52,6 +58,9 @@ tr {
   padding: 5px;
   margin-top: 5px;
 }
+td {
+  font-family: sans-serif;
+}
 ul {
   margin: 0;
   padding: 0;
@@ -82,7 +91,9 @@ h3 {
   color: green;
   margin: 0;
 }
-
+a {
+    font-family: sans-serif;
+}
 #user {
   float:left;
 }

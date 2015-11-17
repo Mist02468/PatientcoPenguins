@@ -41,13 +41,25 @@
     <br>
     <br>
     <div width="50%" style="float:left;">
-        <% if @status == 'live' %>
-            <%= link_to "Join the Discussion", @event.hangout_join_link, :target => "_blank" %>
-        <% end %>
+        <div class="center">
+            <p>Watch the discussion:</p>
+        </div>
         <iframe height="315px" width="560px" src="https://www.youtube.com/embed/<%= @event.hangout_view_link %>"></iframe>
+        <div class="center">
+            <% if @status == 'live' %>
+                <%= link_to "Join the Discussion?", @event.hangout_join_link, :target => "_blank" %>
+            <% end %>
+        </div>
     </div>
         
     <div width="50%" style="float:right;">
-        <iframe height="400px" width="550px" src="https://docs.google.com/document/d/<%= @event.doc_link %>/edit?usp=sharing"></iframe>
+        <div class="center">
+            <p>Take collaborative notes:</p>
+        </div>
+        <% if @status == 'live' %>
+            <iframe height="400px" width="550px" src="https://docs.google.com/document/d/<%= @event.doc_link %>/edit?usp=sharing"></iframe>
+        <% else %>
+            <iframe height="400px" width="550px" src="https://docs.google.com/document/d/<%= @event.doc_link %>"></iframe>
+        <% end %>
     </div>
 <% end %>

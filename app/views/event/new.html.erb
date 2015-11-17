@@ -30,8 +30,7 @@
 <br>
 <%= form_tag({:action => 'create'}, {:id => 'eventForm'}) do %>
 	<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
-    When: <%= select_datetime(DateTime.current.in_time_zone, ampm: true, :prefix => :datetime) %><br>
-    <br>
+    <p>When: <%= select_datetime(DateTime.current.in_time_zone, ampm: true, :prefix => :datetime) %></p>
 	<%= text_area(:event, :topic, :id => "eventTextField", :class => "text_field", :onchange => 'updateHiddenFieldsWithCurrentText()', :placeholder => "write topic here") %>
     <br>
 	<%= submit_tag("Create Event", :class => "button_submit") %>
