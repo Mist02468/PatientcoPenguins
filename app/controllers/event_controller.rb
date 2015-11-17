@@ -100,9 +100,8 @@ class EventController < ApplicationController
   end
   
   def error
-    if params[:exceptionMessage].present? and params[:exceptionImageFile].present?
-        @exceptionMessage   = params[:exceptionMessage]
-        @exceptionImageFile = params[:exceptionImageFile]
+    if params[:exceptionMessage].present?
+        @exceptionMessage = params[:exceptionMessage]
     end
   end
   
@@ -260,7 +259,7 @@ class EventController < ApplicationController
   def showDebuggingErrorPage(exception, session)
     exceptionImageFile = Rails.root.join('app', 'assets', 'images', 'error.png')
     session.save_screenshot(exceptionImageFile, :full => true)
-    redirect_to action: "error", :exceptionMessage => exception.message, :exceptionImageFile => exceptionImageFile
+    redirect_to action: "error", :exceptionMessage => exception.message
   end
  
 end
