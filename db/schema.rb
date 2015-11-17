@@ -64,16 +64,13 @@ ActiveRecord::Schema.define(version: 20151117143616) do
     t.integer "tag_id",  null: false
   end
 
-  create_table "user_subscriptions", force: :cascade do |t|
-    t.integer  "subscriber_id"
-    t.integer  "subscribed_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+  create_table "user_reports", force: :cascade do |t|
+    t.integer  "reporter_id"
+    t.integer  "reported_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.text     "message"
   end
-
-  add_index "user_subscriptions", ["subscribed_id"], name: "index_user_subscriptions_on_subscribed_id"
-  add_index "user_subscriptions", ["subscriber_id", "subscribed_id"], name: "index_user_subscriptions_on_subscriber_id_and_subscribed_id", unique: true
-  add_index "user_subscriptions", ["subscriber_id"], name: "index_user_subscriptions_on_subscriber_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "firstName"
