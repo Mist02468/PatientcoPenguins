@@ -27,6 +27,7 @@ db/*.sqlite3
 *.sassc
 .redcar/
 .sass-cache
+/app/assets/images/error.png
 /config/config.yml
 /config/database.yml
 /config/secrets.yml

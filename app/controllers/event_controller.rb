@@ -43,7 +43,7 @@ class EventController < ApplicationController
     @user  = User.find(session[:user_id])
     if not @event.endTime.nil?
         @status = 'finished'
-    elsif not @event.hangout_start_link.nil?
+    elsif not @event.actualStartTime.nil?
         @status = 'live'
     else
         @status = 'scheduled'
@@ -75,8 +75,7 @@ class EventController < ApplicationController
     
     #driver.quit
 
-    @event.hangout_start_link = 'testing'
-    #@event.hangout_join_link = joinLink
+    @event.actualStartTime = DateTime.current
     @event.save!
 
     redirect_to action: "show", :id => @event.id

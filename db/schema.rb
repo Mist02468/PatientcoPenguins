@@ -11,18 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151114180702) do
+ActiveRecord::Schema.define(version: 20151117143616) do
 
   create_table "events", force: :cascade do |t|
-    t.string   "topic",              null: false
-    t.datetime "startTime",          null: false
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.integer  "host_id",            null: false
-    t.string   "doc_link",           null: false
-    t.string   "hangout_view_link",  null: false
+    t.string   "topic",             null: false
+    t.datetime "startTime",         null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "host_id",           null: false
+    t.string   "doc_link",          null: false
+    t.string   "hangout_view_link", null: false
     t.datetime "endTime"
-    t.string   "hangout_start_link"
+    t.datetime "actualStartTime"
     t.string   "hangout_join_link"
   end
 
