@@ -54,8 +54,8 @@ class EventController < ApplicationController
     @event = Event.find(params[:id])
     
     begin 
-        @driver = joinHangout(@event, 'https://www.youtube.com/my_live_events?filter=scheduled')
-        sleep(20) # should switch to upping and returning to normal the driver.manage.timeouts.implicit_wait
+        @driver = joinHangout(@event, true)
+        sleep(40) # should switch to upping and returning to normal the driver.manage.timeouts.implicit_wait
         @driver.find_element(:xpath, '//div[contains(text(), "Start broadcast")]').click #start the broadcast
         @driver.find_element(:xpath, '//div[contains(text(), "OK")]').click #click OK on the popup
     rescue Exception => e
@@ -73,7 +73,7 @@ class EventController < ApplicationController
     @event = Event.find(params[:id])
     
     begin
-        @driver = joinHangout(@event, 'https://www.youtube.com/my_live_events?filter=active')
+        @driver = joinHangout(@event, false)
         @driver.find_element(:xpath, '//div[contains(text(), "Stop broadcast")]').click #stop the broadcast
     rescue Exception => e
         showDebuggingErrorPage(e, @driver)
@@ -106,7 +106,7 @@ class EventController < ApplicationController
 	params.require(:tag).permit(:name)
   end
   
-  def joinHangout(event, link)
+  def joinHangout(event, isStart)
     require 'selenium-webdriver'
     
     if request.host_with_port != 'localhost:3000'
@@ -121,7 +121,11 @@ class EventController < ApplicationController
     @driver = Selenium::WebDriver.for(:firefox, :profile => profile)
     @driver.manage.timeouts.implicit_wait = 5 # seconds
     
-    @driver.get(link)
+    if isStart
+        @driver.get('https://www.youtube.com/my_live_events?filter=scheduled')
+    else
+        @driver.get(event.hangout_join_link)
+    end
     
     @driver.find_element(:id, "Email").clear
     @driver.find_element(:id, "Email").send_keys "gtcscapstone@gmail.com"
@@ -131,12 +135,19 @@ class EventController < ApplicationController
     @driver.find_element(:id, "Passwd").send_keys get_secret('GoogleAccountPassword')
     @driver.find_element(:id, "signIn").click
     
-    @driver.find_element(:xpath, '//*[@data-video-id="' + event.hangout_view_link + '"]').click
-    sleep(5)
+    if isStart
+        @driver.find_element(:xpath, '//*[@data-video-id="' + event.hangout_view_link + '"]').click
+        sleep(5)
     
-    openWindows = @driver.window_handles
-    @driver.switch_to.window(openWindows[1])
-    
+        openWindows = @driver.window_handles
+        @driver.switch_to.window(openWindows[1])
+    else
+        sleep(10)
+        @driver.find_element(:xpath, '//span[@role="checkbox"]').click
+        @driver.find_element(:xpath, '//div[contains(text(), "Okay, got it!")]').click
+        @driver.find_element(:xpath, '//div[contains(text(), "Join")]').click
+    end
+        
     return @driver
   end
   

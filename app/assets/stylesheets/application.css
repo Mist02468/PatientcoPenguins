@@ -117,13 +117,18 @@ a {
 }
 #fl_menu .menu .menu_item{
   display:block;
-  background:#000;
+  background:green;
   color:#bbb;
   border-top:1px solid #333;
   padding:10px 20px;
   font-family:sans-serif;
   font-size:12px;
+}
+#fl_menu .menu_item a{
+  color: white;
   text-decoration:none;
+  font-family:sans-serif;
+  font-size:12px;
 }
 #fl_menu .menu a.menu_item:hover{
   background:#333;
