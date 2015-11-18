@@ -21,42 +21,29 @@
     </div>
   </div>
   <hr/>
-<%= yield %>
-   <div id="fl_menu">
-      <div class="label">MENU</div>
-        <div class="menu">
-          <div class="menu_item">
-            <%= link_to "Home","../home_feed/show" %><br>
-          </div>
-          <div class="menu_item">
-            <%= link_to "View Profile", controller: "profile", action: 'show', user_id: session[:user_id] %><br>
-          </div>
-          <div class="menu_item">
-            <%= link_to "Create Post","../post/new" %><br>
-          </div>
-          <div class="menu_item">
-            <%= link_to "Create Event","../event/new" %><br>
-          </div>
+    <div id="fl_menu">
+    <div class="label">MENU</div>
+      <div class="menu">
+        <div class="menu_item">
+          <%= link_to "Home","../home_feed/show" %><br>
+        </div>
+        <div class="menu_item">
+          <%= link_to "View Profile", controller: "profile", action: 'show', user_id: session[:user_id] %><br>
+        </div>
+        <div class="menu_item">
+          <%= link_to "Create Post","../post/new" %><br>
+        </div>
+        <div class="menu_item">
+          <%= link_to "Create Event","../event/new" %><br>
         </div>
       </div>
-  <script>
+    </div>
+    <script>
     //config
     $float_speed=1500; //milliseconds
     $float_easing="easeOutQuint";
     $menu_fade_speed=500; //milliseconds
     $closed_menu_opacity=0.75;
-
-    // $(document).on('page:change',function(){     
-    //   if (window.location.pathname == "/access/login" ||
-    //             window.location.pathname == "/post/new" ||
-    //             window.location.pathname == "/event/new") {
-    //             $('#fl_menu').hide();
-    //   }
-    //   else{
-    //     $('#fl_menu').show();
-    //   }
-    // });
-    // $(document).ready(ready);
 
     //cache vars
     $fl_menu=$("#fl_menu");
@@ -80,14 +67,14 @@
     var ready;
     ready = function(){     
     if (window.location.pathname == "/access/login") {
-                $('#fl_menu').hide();
+      $('#fl_menu').hide();
     }
     else{
       $('#fl_menu').show();
     }
     };
     $(document).ready(ready);
-    $(document).on('page:load', ready);;
+    $(document).on('page:change', ready);;
 
     $(window).scroll(function () { 
       FloatMenu();
@@ -103,6 +90,7 @@
       }
     }
   </script>
+  <%= yield %>
 </body>
 
 </html>
