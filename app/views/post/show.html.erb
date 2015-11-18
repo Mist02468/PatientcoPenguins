@@ -1,4 +1,4 @@
-<%= stylesheet_link_tag('post.scss') %>
+<!--<%= stylesheet_link_tag('post.scss') %>-->
 <div class="postDiv">
   <p> <%= link_to "#{@post.user.firstName} #{@post.user.lastName}",
    controller: "profile", action: 'show', user_id: @post.user.id, :class => "link"%> said:</p>

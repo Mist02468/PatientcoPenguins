@@ -67,9 +67,6 @@ group :development, :test do
   gem "sunspot_rails"
   gem "sunspot_solr"
 
-  # jquery turbolinks
-  gem 'jquery-turbolinks'
-
   # Selenium testing
   gem 'rspec-rails'
   gem 'capybara'
