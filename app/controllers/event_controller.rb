@@ -53,10 +53,9 @@ class EventController < ApplicationController
   def start
     @event = Event.find(params[:id])
     
-    sleep(20) # should switch to upping and returning to normal the driver.manage.timeouts.implicit_wait
-    
     begin 
         @driver = joinHangout(@event, 'https://www.youtube.com/my_live_events?filter=scheduled')
+        sleep(20) # should switch to upping and returning to normal the driver.manage.timeouts.implicit_wait
         @driver.find_element(:xpath, '//div[contains(text(), "Start broadcast")]').click #start the broadcast
         @driver.find_element(:xpath, '//div[contains(text(), "OK")]').click #click OK on the popup
     rescue Exception => e
@@ -93,7 +92,7 @@ class EventController < ApplicationController
   end
   
   def error
-    if params[:exceptionMessage].present?
+    if params[:exceptionMessage].present? 
         @exceptionMessage = params[:exceptionMessage]
     end
   end
@@ -135,10 +134,10 @@ class EventController < ApplicationController
     @driver.find_element(:xpath, '//*[@data-video-id="' + event.hangout_view_link + '"]').click
     sleep(5)
     
-    openWindows = driver.window_handles
+    openWindows = @driver.window_handles
     @driver.switch_to.window(openWindows[1])
     
-    return driver
+    return @driver
   end
   
   def createGoogleDoc(event)
@@ -246,8 +245,8 @@ class EventController < ApplicationController
             @headless.destroy
         end
     end
-    
-    redirect_to action: "error", :exceptionMessage => exception.message
+    puts exception.backtrace
+    redirect_to action: "error", :exceptionMessage => exception.message + " at " + exception.backtrace[0]
   end
  
 end
