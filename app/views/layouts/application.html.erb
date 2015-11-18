@@ -21,6 +21,7 @@
     </div>
   </div>
   <hr/>
+<%= yield %>
    <div id="fl_menu">
       <div class="label">MENU</div>
         <div class="menu">
@@ -82,10 +83,10 @@
                 $('#fl_menu').hide();
     }
     else{
-      $('#fl_menu').hide();
+      $('#fl_menu').show();
     }
     };
-    //$(document).ready(ready);
+    $(document).ready(ready);
     $(document).on('page:load', ready);;
 
     $(window).scroll(function () { 
@@ -102,7 +103,6 @@
       }
     }
   </script>
-<%= yield %>
 </body>
 
 </html>
