@@ -1,22 +1,29 @@
 <%= stylesheet_link_tag('home_feed.scss') %>
+<head>
+</head>
+<body>
+<div class="postDiv">
 
-<% if @tag != nil %>
-    <h1>Posts Tagged With <%= @tag.name %></h1>
-<% else %>
-    <h1>Home</h1>
-<% end %>
-
-<%= link_to "View Profile", controller: "profile", action: 'show', user_id: session[:user_id] %>
-<%= link_to "Create Post","../post/new" %>
-<%= link_to "Create Event","../event/new" %>
-<table>
-	<% @posts.where("kind = 0").order("voteCount DESC").order("created_at DESC").each do |post|%>
-		<div class = "highlight_row">
-		    <tr>
-		    	<td><%= link_to "#{post.text}", controller: "post", action: "show", id: post.id %></td>
-		    	<td><%= post.created_at.in_time_zone("Eastern Time (US & Canada)").strftime("Posted on %m/%d/%Y at %I:%M%p") %></td>
-		    	<td><%= link_to "#{post.user.firstName} #{post.user.lastName}", controller: "profile", action: 'show', user_id: post.user.id%></td>
-		    </tr>
-		</div>
+	<% if @tag != nil %>
+	    <h1>Posts Tagged With <%= @tag.name %></h1>
+	<% else %>
+	    <h1>Home</h1>
 	<% end %>
-</table>
+
+	<%= link_to "View Profile", controller: "profile", action: 'show', user_id: session[:user_id] %>
+	<%= link_to "Create Post","../post/new" %>
+	<%= link_to "Create Event","../event/new" %>
+	<table>
+		<% @posts.where("kind = 0").order("voteCount DESC").order("created_at DESC").each do |post|%>
+			<div class = "highlight_row">
+			    <tr>
+			    	<td width="470px"><%= link_to "#{post.text}", controller: "post", action: "show", id: post.id %><br>
+			    	<div style="font-size:14px; color:grey;"><%= post.created_at.in_time_zone("Eastern Time (US & Canada)").strftime("%m/%d/%Y at %I:%M%p") %></div><br>
+			    	<div style="float:right;">
+			    	<%= link_to "#{post.user.firstName} #{post.user.lastName}", controller: "profile", action: 'show', user_id: post.user.id%></div></td>
+			    </tr>
+			</div>
+		<% end %>
+	</table>
+</div>
+</body>
