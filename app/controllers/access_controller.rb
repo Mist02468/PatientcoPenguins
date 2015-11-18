@@ -1,7 +1,7 @@
 
 class AccessController < ApplicationController
 
-	before_action :confirm_logged_in, :except => [:login, :startLinkedInAuth, :finishLinkedInAuth, :logout]
+	before_action :confirm_logged_in, :except => [:login, :startLinkedInAuth, :finishLinkedInAuth, :logout, :locked]
 
   def login
 	#login form
@@ -41,15 +41,16 @@ class AccessController < ApplicationController
       found_user = User.where(:linkedInId => response['id']).first
       if found_user == nil
 			found_user = createNewUser(response)
-		  else
+      else
 			found_user = updateUser(response, found_user)
-		  end
-		  session[:user_id] = found_user.id
-			if found_user.reportedCount >= 3
-				redirect_to(:action => 'locked')
-			else
-      	redirect_to(:controller => 'home_feed', :action => 'show')
-			end
+      end
+      session[:user_id] = found_user.id
+	  if found_user.reportedCount >= 3
+        session[:user_id] = nil
+        redirect_to(:action => 'locked')
+      else
+        redirect_to(:controller => 'home_feed', :action => 'show')
+	  end
     elsif params[:error].present? && params[:error_description].present?
       puts "Rejected"
     else
