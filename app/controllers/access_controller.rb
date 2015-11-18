@@ -7,6 +7,10 @@ class AccessController < ApplicationController
 	#login form
   end
 
+  def access
+    @fl_menu  = true
+  end
+  
   def startLinkedInAuth
     require 'oauth2'
     
