@@ -36,7 +36,7 @@ padding:20px;
 				<br></br>
 				<font size="3"> <%= @user.position %> </font>
         <%= form_tag({:action => 'report'}) do %>
-            <%= text_field(:report, :reason, :placeholder => "Reason for report") %>
+            <%= text_field(:reason, :placeholder => "Reason for report") %>
             <%= hidden_field_tag(:reporting_user_id, session[:user_id]) %>
             <%= hidden_field_tag(:reported_user_id, @user.id) %>
             <%= submit_tag("Report User", :class => "button_submit", data: { disable_with: "You have already reported this user." }) %>

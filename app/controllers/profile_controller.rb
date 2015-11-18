@@ -3,8 +3,8 @@ class ProfileController < ApplicationController
 	before_action :confirm_logged_in
 
   def report
-		if params[:user_id].present?
-			@user = User.find(params[:user_id])
+		if params[:reported_user_id].present?
+			@user = User.find(params[:reported_user_id])
       @user.reportedCount += 1
 			puts "reportCount " + @user.reportedCount.to_s
 			@report = UserReport.new
@@ -20,11 +20,11 @@ class ProfileController < ApplicationController
 			end
 			@report.save
 			@user.user_reports << @report
-			@user2.user_reporting << @report
+			@user2.users_reporting << @report
 			@user.save!
 			@user2.save!
 			puts @report.to_s
-			redirect_to(controller: "profile", :action => "show", :user_id => params[:user_id])
+			redirect_to(controller: "profile", :action => "show", :user_id => params[:reported_user_id])
 		end
   end
 
