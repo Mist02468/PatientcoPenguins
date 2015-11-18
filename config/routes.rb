@@ -31,6 +31,7 @@ Rails.application.routes.draw do
 
   get 'access/login'
   get 'access/logout'
+  get 'access/locked'
   get 'access/finishLinkedInAuth'
 
   get 'home_feed/show'

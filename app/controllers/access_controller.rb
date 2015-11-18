@@ -7,13 +7,17 @@ class AccessController < ApplicationController
 	#login form
   end
 
+	def locked
+		#locked out form
+	end
+
   def access
     @fl_menu  = true
   end
-  
+
   def startLinkedInAuth
     require 'oauth2'
-    
+
     puts 'here'
       puts request.host_with_port
 
@@ -36,13 +40,16 @@ class AccessController < ApplicationController
 
       found_user = User.where(:linkedInId => response['id']).first
       if found_user == nil
-		found_user = createNewUser(response)
-	  else
-		found_user = updateUser(response, found_user)
-	  end
-	  session[:user_id] = found_user.id
-
-      redirect_to(:controller => 'home_feed', :action => 'show')
+			found_user = createNewUser(response)
+		  else
+			found_user = updateUser(response, found_user)
+		  end
+		  session[:user_id] = found_user.id
+			if found_user.reportedCount >= 3
+				redirect_to(:action => 'locked')
+			else
+      	redirect_to(:controller => 'home_feed', :action => 'show')
+			end
     elsif params[:error].present? && params[:error_description].present?
       puts "Rejected"
     else
