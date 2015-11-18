@@ -66,7 +66,8 @@
     });
     var ready;
     ready = function(){     
-    if (window.location.pathname == "/access/login") {
+    if (window.location.pathname == "/access/login" ||
+        window.location.pathname == "/access/locked") {
       $('#fl_menu').hide();
     }
     else{
