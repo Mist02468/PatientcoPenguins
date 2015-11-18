@@ -53,33 +53,16 @@ class EventController < ApplicationController
   def start
     @event = Event.find(params[:id])
     
+    sleep(20) # should switch to upping and returning to normal the driver.manage.timeouts.implicit_wait
+    
     begin 
-        driver = joinHangout(@event, true)
-        
-        #el = driver.find_element(:xpath, "//div[@id=':sd.Pt']/div/div[2]/div")
-        #driver.action.context_click(el).perform
-        
-        #peopleIconArea = driver.find_element(:id, ':sd.Pt')
-        #driver.action.move_to(peopleIconArea).perform
-        #driver.find_element(:xpath, "//div[@id=':sd.Pt']/div/div[2]/div").click #click the add people icon
-        
-        #driver.find_element(:css, "div.a-b:nth-child(2)").click #click the add people icon
-        #driver.find_element(:css, "div.ha-w-D-f").click #click the add people icon
-        
-        #boxWithJoinLink = driver.find_element(:id, ":ut.vt").click #find the box with the join link
-        #joinLink = boxWithJoinLink[:value]
-        
-        #driver.find_element(:id, ":uu.Ji").click #click the close button
-        #driver.find_element(:id, ":t3.lk")
-        
-        driver.find_element(:id, ":t0.ak").click #click Start Broadcast
-        driver.find_element(:id, ":ur.Hk").click #click Okay
+        @driver = joinHangout(@event, 'https://www.youtube.com/my_live_events?filter=scheduled')
+        @driver.find_element(:xpath, '//div[contains(text(), "Start broadcast")]').click #start the broadcast
+        @driver.find_element(:xpath, '//div[contains(text(), "OK")]').click #click OK on the popup
     rescue Exception => e
-        showDebuggingErrorPage(e, driver)
+        showDebuggingErrorPage(e, @driver)
         return
     end
-    
-    #driver.quit
 
     @event.actualStartTime = DateTime.current
     @event.save!
@@ -91,14 +74,14 @@ class EventController < ApplicationController
     @event = Event.find(params[:id])
     
     begin
-        driver = joinHangout(@event)
-        driver.find_element(:id, ":t7.ak").click #click Stop Broadcast
+        @driver = joinHangout(@event, 'https://www.youtube.com/my_live_events?filter=active')
+        @driver.find_element(:xpath, '//div[contains(text(), "Stop broadcast")]').click #stop the broadcast
     rescue Exception => e
-        showDebuggingErrorPage(e, driver)
+        showDebuggingErrorPage(e, @driver)
         return
     end
         
-    driver.quit
+    @driver.quit
     if request.host_with_port != 'localhost:3000'
         @headless.destroy
     end
@@ -124,7 +107,7 @@ class EventController < ApplicationController
 	params.require(:tag).permit(:name)
   end
   
-  def joinHangout(event, isStart = false)
+  def joinHangout(event, link)
     require 'selenium-webdriver'
     
     if request.host_with_port != 'localhost:3000'
@@ -136,39 +119,24 @@ class EventController < ApplicationController
     profile = Selenium::WebDriver::Firefox::Profile.new()
     profile['plugin.state.npgoogletalk'] = 2
     profile['plugin.state.npo1d']        = 2
-    driver = Selenium::WebDriver.for(:firefox, :profile => profile)
-    driver.manage.timeouts.implicit_wait = 5 # seconds
+    @driver = Selenium::WebDriver.for(:firefox, :profile => profile)
+    @driver.manage.timeouts.implicit_wait = 5 # seconds
     
-    if isStart
-        driver.get('https://www.youtube.com/my_live_events?filter=scheduled')
-    else
-        driver.get(event.hangout_join_link)
-    end
+    @driver.get(link)
     
-    driver.find_element(:id, "Email").clear
-    driver.find_element(:id, "Email").send_keys "gtcscapstone@gmail.com"
-    driver.find_element(:id, "next").click
+    @driver.find_element(:id, "Email").clear
+    @driver.find_element(:id, "Email").send_keys "gtcscapstone@gmail.com"
+    @driver.find_element(:id, "next").click
     
-    driver.find_element(:id, "Passwd").clear
-    driver.find_element(:id, "Passwd").send_keys get_secret('GoogleAccountPassword')
-    driver.find_element(:id, "signIn").click
+    @driver.find_element(:id, "Passwd").clear
+    @driver.find_element(:id, "Passwd").send_keys get_secret('GoogleAccountPassword')
+    @driver.find_element(:id, "signIn").click
     
-    if isStart
-        driver.find_element(:xpath, '//*[@data-video-id="' + event.hangout_view_link + '"]').click
-        sleep(5)
-        
-        openWindows = driver.window_handles
-        driver.switch_to.window(openWindows[1])
-        sleep(10)
-    end
-    
+    @driver.find_element(:xpath, '//*[@data-video-id="' + event.hangout_view_link + '"]').click
     sleep(5)
-    present = driver.find_elements(:css, "div.a-X-fe")
-    if present.length > 0
-        driver.find_element(:css, "div.a-X-fe").click #click the check box
-        driver.find_element(:id, ":t3.Tj").click #click Okay I get it button
-        driver.find_element(:id, ":t4.Et").click #click Join
-    end
+    
+    openWindows = driver.window_handles
+    @driver.switch_to.window(openWindows[1])
     
     return driver
   end
