@@ -21,7 +21,7 @@
     </div>
   </div>
   <hr/>
-    <div id="fl_menu">
+   <div id="fl_menu">
       <div class="label">MENU</div>
         <div class="menu">
           <div class="menu_item">
@@ -44,15 +44,6 @@
     $float_easing="easeOutQuint";
     $menu_fade_speed=500; //milliseconds
     $closed_menu_opacity=0.75;
-
-    var ready;
-    ready = function(){     
-    if (window.location.pathname == "/access/login") {
-                $('#fl_menu').hide();
-          }
-    };
-    $(document).ready(ready);
-    $(document).on('page:load', ready);
 
     // $(document).on('page:change',function(){     
     //   if (window.location.pathname == "/access/login" ||
@@ -85,6 +76,17 @@
         }
       );
     });
+    var ready;
+    ready = function(){     
+    if (window.location.pathname == "/access/login") {
+                $('#fl_menu').hide();
+    }
+    else{
+      $('#fl_menu').hide();
+    }
+    };
+    //$(document).ready(ready);
+    $(document).on('page:load', ready);;
 
     $(window).scroll(function () { 
       FloatMenu();
@@ -102,6 +104,7 @@
   </script>
 <%= yield %>
 </body>
+
 </html>
 
 

@@ -95,9 +95,10 @@ a {
     a {font-size: 15px;}
 }
 #fl_menu{
-  top:100px;
+  top:10%;
+  position:absolute;
   float:right;
-  left:0px;
+  left: 90%;
   z-index:9999;
   width:150px;
   height:50px;
