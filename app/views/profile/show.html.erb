@@ -22,9 +22,9 @@ padding:20px;
 	<div class="postDiv">
 		<div width="50%" style="float:left;">
 			<p class="a">
-				<font size="6" color=#32CD32> <%= @user.firstName %> </font>
+				<font size="6" color=green> <%= @user.firstName %> </font>
 				<br></br>
-				<font size="6" color=#32CD32> <%= @user.lastName %> </font>
+				<font size="6" color=green> <%= @user.lastName %> </font>
 				<br></br>
 				<font size="3"> <%= @user.location %> </font>
 				<br></br>
@@ -35,6 +35,12 @@ padding:20px;
 				<font size="3"> <%= @user.company %> </font>
 				<br></br>
 				<font size="3"> <%= @user.position %> </font>
+        <%= form_tag({:action => 'report'}) do %>
+            <%= text_field(:report, :reason, :placeholder => "Reason for report") %>
+            <%= hidden_field_tag(:reporting_user_id, session[:user_id]) %>
+            <%= hidden_field_tag(:reported_user_id, @user.id) %>
+            <%= submit_tag("Report User", :class => "button_submit", data: { disable_with: "You have already reported this user." }) %>
+        <% end %>
 			</p>
 		</div>
 		<div width="50%" style="float:right; max-width:425px; padding-top:8px;">

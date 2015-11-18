@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  get 'profile/report'
+  post 'profile/report'
   get 'profile/message'
   get 'profile/subscribe'
   get 'profile/show'
@@ -28,7 +28,7 @@ Rails.application.routes.draw do
   post 'event/start'
   post 'event/stop'
   get 'event/error'
-  
+
   get 'access/login'
   get 'access/logout'
   get 'access/finishLinkedInAuth'
