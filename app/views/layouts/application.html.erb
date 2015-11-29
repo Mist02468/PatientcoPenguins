@@ -39,47 +39,59 @@
       </div>
     </div>
     <script>
+
+    document.addEventListener("page:restore", function() {
+      $("#fl_menu .menu").fadeTo(0, 0.75);
+      $("#fl_menu .menu").fadeOut(0);
+      restore();
+    });
+
+    document.addEventListener("page:change", function() {
+      restore();
+    });
+
     //config
-    $float_speed=1500; //milliseconds
-    $float_easing="easeOutQuint";
-    $menu_fade_speed=500; //milliseconds
-    $closed_menu_opacity=0.75;
+    function restore(){
 
-    //cache vars
-    $fl_menu=$("#fl_menu");
-    $fl_menu_menu=$("#fl_menu .menu");
-    $fl_menu_label=$("#fl_menu .label");
+      $float_speed=1000; //milliseconds
+      $float_easing="easeOutQuint";
+      $menu_fade_speed=200; //milliseconds
+      $closed_menu_opacity=0.75;
 
-    $(document).ready(function() {
-      menuPosition=$('#fl_menu').position().top;
-      FloatMenu();
-      $fl_menu.hover(
-        function(){ //mouse over
-          $fl_menu_label.fadeTo($menu_fade_speed, 1);
-          $fl_menu_menu.fadeIn($menu_fade_speed);
-        },
-        function(){ //mouse out
-          $fl_menu_label.fadeTo($menu_fade_speed, $closed_menu_opacity);
-          $fl_menu_menu.fadeOut($menu_fade_speed);
-        }
-      );
-    });
-    var ready;
-    ready = function(){     
-    if (window.location.pathname == "/access/login" ||
-        window.location.pathname == "/access/locked") {
-      $('#fl_menu').hide();
-    }
-    else{
-      $('#fl_menu').show();
-    }
+      //cache vars
+      $fl_menu=$("#fl_menu");
+      $fl_menu_menu=$("#fl_menu .menu");
+      $fl_menu_label=$("#fl_menu .label");
+
+      $(document).ready(function() {
+        menuPosition=$('#fl_menu').scrollTop() + 100;
+        FloatMenu();
+        $fl_menu.hover(
+          function(){ //mouse over
+            $fl_menu_label.fadeTo($menu_fade_speed, 1);
+            $fl_menu_menu.fadeIn($menu_fade_speed);
+          },
+          function(){ //mouse out
+            $fl_menu_label.fadeTo($menu_fade_speed, $closed_menu_opacity);
+            $fl_menu_menu.fadeOut($menu_fade_speed);
+          }
+        );
+      });
+      
+      var ready;
+      ready = function(){     
+      if (window.location.pathname == "/access/login" ||
+          window.location.pathname == "/access/locked") {
+        $('#fl_menu').hide();
+      }
+      else{
+        $('#fl_menu').show();
+      }
+      };
+      $(window).scroll(function () { 
+        FloatMenu();
+      });
     };
-    $(document).ready(ready);
-    $(document).on('page:change', ready);;
-
-    $(window).scroll(function () { 
-      FloatMenu();
-    });
 
     function FloatMenu(){
       var scrollAmount=$(document).scrollTop();
