@@ -69,7 +69,7 @@
         <div class="center">
             <p>Watch the discussion:</p>
         </div>
-        <iframe height="315px" width="560px" src="https://www.youtube.com/embed/<%= @event.hangout_view_link %>"></iframe>
+        <iframe src="https://www.youtube.com/embed/<%= @event.hangout_view_link %>"></iframe>
         <% if @status == 'live' and @user.id != @event.host.id %>
             <div class="center">
                 <%= link_to "Join the Discussion?", @event.hangout_join_link, :target => "_blank" %>
@@ -81,6 +81,21 @@
         <div class="center">
             <p>Take collaborative notes:</p>
         </div>
-        <iframe height="400px" width="550px" src="https://docs.google.com/document/d/<%= @event.doc_link %>/edit?usp=sharing"></iframe>
+        <iframe src="https://docs.google.com/document/d/<%= @event.doc_link %>/edit?usp=sharing" seamless></iframe>
     </div>
 <% end %>
+
+<script>
+function resizeIFrames() {
+    width = ($( window ).width() - 100)/2;
+    height = $( window ).height() - 300;
+    $("iframe").width(width)
+    $("iframe").height(height)
+}
+$(document).ready(function() {
+    resizeIFrames();
+});
+$(window).resize(function() {
+    resizeIFrames();
+});
+</script>
