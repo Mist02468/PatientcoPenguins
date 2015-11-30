@@ -39,15 +39,17 @@
       </div>
     </div>
     <script>
-
-    document.addEventListener("page:restore", function() {
-      $("#fl_menu .menu").fadeTo(0, 0.75);
-      $("#fl_menu .menu").fadeOut(0);
-      restore();
-    });
-
     document.addEventListener("page:change", function() {
-      restore();
+      if (window.location.pathname == "/access/login" ||
+          window.location.pathname == "/access/locked") {
+        $('#fl_menu').hide();
+      }
+      else{
+        $('#fl_menu').show();
+        $("#fl_menu .menu").fadeTo(0, 0.75);
+        $("#fl_menu .menu").fadeOut(0);
+        restore();
+      }
     });
 
     //config
@@ -77,17 +79,7 @@
           }
         );
       });
-      
-      var ready;
-      ready = function(){     
-      if (window.location.pathname == "/access/login" ||
-          window.location.pathname == "/access/locked") {
-        $('#fl_menu').hide();
-      }
-      else{
-        $('#fl_menu').show();
-      }
-      };
+
       $(window).scroll(function () { 
         FloatMenu();
       });
