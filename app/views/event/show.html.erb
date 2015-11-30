@@ -34,6 +34,7 @@
             <script type="IN/Share" data-url="<%=request.original_url%>"  data-counter="right"></script>
         </div>
     </div>
+    <br>
     <ul>
         <% @event.tags.each do |t| %>
             <li class="tag"><%= t.name %></li>
@@ -62,6 +63,7 @@
 </div>
 
 <% if @status == 'finished' or (@status == 'live' and @user.id != @event.host.id) %>
+    <br>
     <br>
     <div width="50%" style="float:left;">
         <div class="center">
