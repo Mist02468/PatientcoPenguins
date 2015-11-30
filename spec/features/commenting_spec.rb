@@ -21,6 +21,8 @@ describe "CommentingSpec" do
   it "test_commenting_spec" do
     @driver = TestCommonFunctions.login(@base_url, @driver)
     
+    menu = @driver.find_element(:id, 'fl_menu')
+    @driver.action.move_to(menu).perform
     @driver.find_element(:link, "Create Post").click
     
     @driver.find_element(:id, "postTextField").clear
@@ -40,7 +42,8 @@ describe "CommentingSpec" do
     verify { (@driver.find_element(:xpath, "(//a[contains(text(),'GT Capstone')])[3]").text).should == "GT Capstone" }
     verify { (@driver.find_element(:css, "p.post").text).should == "test post" }
     
-    @driver.find_element(:id, "Pronnect").click
+    menu = @driver.find_element(:id, 'fl_menu')
+    @driver.action.move_to(menu).perform
     @driver.find_element(:link, "Create Post").click
     @driver.find_element(:id, "postTextField").clear
     @driver.find_element(:id, "postTextField").send_keys "another test post"
