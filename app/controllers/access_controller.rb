@@ -11,10 +11,6 @@ class AccessController < ApplicationController
 		#locked out form
 	end
 
-  def access
-    @fl_menu  = true
-  end
-
   def startLinkedInAuth
     require 'oauth2'
 
