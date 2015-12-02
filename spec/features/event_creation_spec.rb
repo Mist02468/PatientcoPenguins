@@ -21,6 +21,8 @@ describe "EventCreationSpec" do
   it "test_event_creation_spec" do
     @driver = TestCommonFunctions.login(@base_url, @driver)
     
+    menu = @driver.find_element(:id, 'fl_menu')
+    @driver.action.move_to(menu).perform
     @driver.find_element(:link, "Create Event").click
     
     uniqueTopicName = DateTime.new
@@ -30,10 +32,9 @@ describe "EventCreationSpec" do
     Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, "datetime_day")).select_by(:text, "25")
     Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, "datetime_hour")).select_by(:text, "07 AM")
     Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, "datetime_minute")).select_by(:text, "35")
-    @driver.find_element(:name, "commit").click
+    @driver.find_element(:css, "div > input[name=\"commit\"]").click
     
-    verify { (@driver.find_element(:css, "p").text).should == "You're invited by GT Capstone:" }
-    verify { (@driver.find_element(:link, "GT Capstone").text).should == "GT Capstone" }
+    verify { (@driver.find_element(:css, "p").text).should == "You will host:" }
     verify { (@driver.find_element(:css, "p.eventInfo").text).should == "Test Event " + uniqueTopicName.to_s + " Roundtable Discussion" }
     verify { (@driver.find_element(:css, "h3").text).should == "on 12/25/2015 at 07:35AM" }
   end

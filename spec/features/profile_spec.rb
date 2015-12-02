@@ -21,6 +21,8 @@ describe "ProfileSpec" do
   it "test_profile_spec" do
     @driver = TestCommonFunctions.login(@base_url, @driver)
     
+    menu = @driver.find_element(:id, 'fl_menu')
+    @driver.action.move_to(menu).perform
     @driver.find_element(:link, "View Profile").click
     
     verify { (@driver.find_element(:css, "font").text).should == "GT" }

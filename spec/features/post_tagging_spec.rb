@@ -21,6 +21,8 @@ describe "PostTagging" do
   it "test_post_tagging" do
     @driver = TestCommonFunctions.login(@base_url, @driver)
     
+    menu = @driver.find_element(:id, 'fl_menu')
+    @driver.action.move_to(menu).perform
     @driver.find_element(:link, "Create Post").click
     
     @driver.find_element(:id, "postTextField").clear

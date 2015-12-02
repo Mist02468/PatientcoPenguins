@@ -24,6 +24,8 @@ describe "LoginLogoutSpec" do
     verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }
     verify { (@driver.find_element(:id, "RevenueCycle").text).should == "Revenue Cycle" }
     
+    menu = @driver.find_element(:id, 'fl_menu')
+    @driver.action.move_to(menu).perform
     @driver.find_element(:link, "View Profile").click
     verify { (@driver.find_element(:xpath, "//font[4]").text).should == "gtcscapstone@gmail.com" }
     verify { (@driver.find_element(:css, "font").text).should == "GT" }

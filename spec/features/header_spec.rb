@@ -30,6 +30,8 @@ describe "HeaderSpec" do
     verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }
     verify { (@driver.find_element(:id, "RevenueCycle").text).should == "Revenue Cycle" }
     
+    menu = @driver.find_element(:id, 'fl_menu')
+    @driver.action.move_to(menu).perform
     @driver.find_element(:link, "Create Post").click
     (@driver.title).should == "Pronnect"
     verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }
@@ -43,12 +45,16 @@ describe "HeaderSpec" do
     verify { (@driver.find_element(:id, "RevenueCycle").text).should == "Revenue Cycle" }
     
     @driver.find_element(:id, "Pronnect").click
+    menu = @driver.find_element(:id, 'fl_menu')
+    @driver.action.move_to(menu).perform
     @driver.find_element(:link, "View Profile").click
     (@driver.title).should == "Pronnect"
     verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }
     verify { (@driver.find_element(:id, "RevenueCycle").text).should == "Revenue Cycle" }
     
     @driver.find_element(:id, "Pronnect").click
+    menu = @driver.find_element(:id, 'fl_menu')
+    @driver.action.move_to(menu).perform
     @driver.find_element(:link, "Create Event").click
     (@driver.title).should == "Pronnect"
     verify { (@driver.find_element(:id, "Pronnect").text).should == "Pronnect" }

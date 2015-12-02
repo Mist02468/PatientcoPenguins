@@ -23,6 +23,8 @@ describe "HomeFeedPostsWithTagSpec" do
     
     uniquePostText = DateTime.new
 
+    menu = @driver.find_element(:id, 'fl_menu')
+    @driver.action.move_to(menu).perform
     @driver.find_element(:link, "Create Post").click
     @driver.find_element(:id, "tag_name").clear
     @driver.find_element(:id, "tag_name").send_keys "testTag1"
@@ -32,6 +34,8 @@ describe "HomeFeedPostsWithTagSpec" do
     @driver.find_element(:css, "#postForm > input[name=\"commit\"]").click
     
     @driver.find_element(:id, "Pronnect").click
+    menu = @driver.find_element(:id, 'fl_menu')
+    @driver.action.move_to(menu).perform
     @driver.find_element(:link, "Create Post").click
     @driver.find_element(:id, "tag_name").clear
     @driver.find_element(:id, "tag_name").send_keys "testTag2"
@@ -41,6 +45,8 @@ describe "HomeFeedPostsWithTagSpec" do
     @driver.find_element(:css, "#postForm > input[name=\"commit\"]").click
     
     @driver.find_element(:id, "Pronnect").click
+    menu = @driver.find_element(:id, 'fl_menu')
+    @driver.action.move_to(menu).perform
     @driver.find_element(:link, "Create Post").click
     @driver.find_element(:id, "tag_name").clear
     @driver.find_element(:id, "tag_name").send_keys "testTag2"
@@ -51,7 +57,7 @@ describe "HomeFeedPostsWithTagSpec" do
     
     @driver.find_element(:link, "testTag2").click
     
-    verify { (@driver.find_element(:css, "h1").text).should == "Posts Tagged With testTag2" }
+    verify { (@driver.find_element(:css, "h1").text).should == "Content Tagged With testTag2" }
     verify { (@driver.find_element(:link, "This should appear 2 " + uniquePostText.to_s + ".").text).should == "This should appear 2 " + uniquePostText.to_s + "." }
     verify { (@driver.find_element(:link, "This should appear 1 " + uniquePostText.to_s + ".").text).should == "This should appear 1 " + uniquePostText.to_s + "." }
     
