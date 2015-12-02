@@ -33,7 +33,7 @@
 				<div class = "highlight_row">
 				    <tr>
 				    	<td width="240px">
-				    		<div class="linkToEvent"><%= link_to "#{event.topic}", controller: "post", action: "show", id: event.id %></div><br>
+				    		<div class="linkToEvent"><%= link_to "#{event.topic}", controller: "event", action: "show", id: event.id %></div><br>
 				    		<div style="font-size:14px; color:grey;"><%= event.created_at.in_time_zone("Eastern Time (US & Canada)").strftime("%m/%d/%Y at %I:%M%p") %></div><br>
 					    	<div style="float:right;">
 					    	<%= link_to "#{event.host.firstName} #{event.host.lastName}", controller: "profile", action: 'show', user_id: event.host.id%>
