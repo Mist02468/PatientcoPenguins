@@ -37,7 +37,7 @@
     <br>
     <ul>
         <% @event.tags.each do |t| %>
-            <li class="tag"><%= t.name %></li>
+            <li class="tag"><%= link_to t.name, controller: "home_feed", action: 'show', tag_id: t.id %></li>
         <% end %>
     </ul>
     <% if @user.id == @event.host.id and @status != 'finished' %>
