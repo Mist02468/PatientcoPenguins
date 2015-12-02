@@ -10,9 +10,9 @@ tr {
 	bgcolor: "eee";
 }
 
-.postDiv {
+.homeDiv {
   margin:auto;
-  max-width: 700px;
+  max-width: 730px;
 }
 
 .linkToArticle a {
@@ -21,6 +21,17 @@ tr {
 }
 
 .linkToArticle a:hover {
+	color: rgb(0, 128, 0);
+	text-decoration:none;
+}
+
+.linkToEvent a {
+	color: #333;
+	text-decoration:none;
+	font-weight:bold;
+}
+
+.linkToEvent a:hover {
 	color: rgb(0, 128, 0);
 	text-decoration:none;
 }

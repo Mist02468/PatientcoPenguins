@@ -2,25 +2,49 @@
 <head>
 </head>
 <body>
-<div class="postDiv">
+<div class="homeDiv">
 
 	<% if @tag != nil %>
 	    <h1>Content Tagged With <%= @tag.name %></h1>
 	<% else %>
 	    <h1>Home</h1>
 	<% end %>
-	<table>
-		<% @posts.where("kind = 0").order("voteCount DESC").order("created_at DESC").each do |post|%>
-			<div class = "highlight_row">
-			    <tr>
-			    	<td width="470px">
-			    	<div class="linkToArticle"><%= link_to "#{post.text}", controller: "post", action: "show", id: post.id %></div><br>
-			    	<div style="font-size:14px; color:grey;"><%= post.created_at.in_time_zone("Eastern Time (US & Canada)").strftime("%m/%d/%Y at %I:%M%p") %></div><br>
-			    	<div style="float:right;">
-			    	<%= link_to "#{post.user.firstName} #{post.user.lastName}", controller: "profile", action: 'show', user_id: post.user.id%></div></td>
-			    </tr>
+	<div style="width:50%; float:left">
+		<table>
+			<h3>Recent Posts</h3>
+			<% @posts.where("kind = 0").order("voteCount DESC").order("created_at DESC").each do |post|%>
+				<div class = "highlight_row">
+				    <tr>
+				    	<td width="330px">
+					    	<div class="linkToArticle"><%= link_to "#{post.text}", controller: "post", action: "show", id: post.id %></div><br>
+					    	<div style="font-size:14px; color:grey;"><%= post.created_at.in_time_zone("Eastern Time (US & Canada)").strftime("%m/%d/%Y at %I:%M%p") %></div><br>
+					    	<div style="float:right;">
+					    	<%= link_to "#{post.user.firstName} #{post.user.lastName}", controller: "profile", action: 'show', user_id: post.user.id%></div>
+				    	</td>
+				    </tr>
+				</div>
+			<% end %>
+		</table>
+	</div>
+	<div style="width:50%; float:left">
+		<table>
+			<h3>Recent Events</h3>
+			<% @events.order("created_at DESC").each do |event|%>
+				<div class = "highlight_row">
+				    <tr>
+				    	<td width="240px">
+				    		<div class="linkToEvent"><%= link_to "#{event.topic}", controller: "post", action: "show", id: event.id %></div><br>
+				    		<div style="font-size:14px; color:grey;"><%= event.created_at.in_time_zone("Eastern Time (US & Canada)").strftime("%m/%d/%Y at %I:%M%p") %></div><br>
+					    	<div style="float:right;">
+					    	<%= link_to "#{event.host.firstName} #{event.host.lastName}", controller: "profile", action: 'show', user_id: event.host.id%>
+					    	</div>
+
+				    	</td>			    	
+				    </tr>
+				</div>
+			<% end %>
 			</div>
-		<% end %>
-	</table>
+		</table>
+	</div>
 </div>
 </body>
