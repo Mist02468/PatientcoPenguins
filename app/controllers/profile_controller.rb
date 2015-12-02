@@ -36,7 +36,7 @@ class ProfileController < ApplicationController
   def show
 		if params[:user_id].present?
 			@user = User.find(params[:user_id])
-            @posts = Post.where("user_id = #{@user.id}").where("kind = 0").order("voteCount DESC").order("created_at DESC")
+            @posts = Post.where("user_id = #{@user.id}").where("kind = 0").order("created_at DESC")
 						@is_user = @user.id == session[:user_id]
 						@reportable = UserReport.where("reported_id == #{@user.id}").where("reporter_id == #{session[:user_id]}").count == 0
 						puts "reportable is " + @reportable.to_s

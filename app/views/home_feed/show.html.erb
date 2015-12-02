@@ -12,7 +12,7 @@
 	<div style="width:50%; float:left">
 		<table>
 			<h3>Recent Posts</h3>
-			<% @posts.where("kind = 0").order("voteCount DESC").order("created_at DESC").each do |post|%>
+			<% @posts.where("kind = 0").order("created_at DESC").each do |post|%>
 				<div class = "highlight_row">
 				    <tr>
 				    	<td width="330px">
