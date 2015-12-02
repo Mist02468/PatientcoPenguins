@@ -1,25 +1,12 @@
 Rails.application.routes.draw do
 
-  post 'profile/report'
-  get 'profile/message'
-  get 'profile/subscribe'
   get 'profile/show'
+  post 'profile/report'
 
   get 'post/new'
   post 'post/new'
-  get 'post/show'
-  get 'post/goToProfile'
-
-  get 'post/create'
   post 'post/create'
-
-  get 'post/comment'
-  get 'post/upvote'
-  get 'post/view'
-
-  get 'search/searchByTag'
-  get 'search/searchByText'
-  get 'search/searchByUser'
+  get 'post/show'
 
   get 'event/new'
   post 'event/new'
@@ -32,15 +19,10 @@ Rails.application.routes.draw do
   get 'access/login'
   get 'access/logout'
   get 'access/locked'
+  get 'access/startLinkedInAuth'
   get 'access/finishLinkedInAuth'
 
   get 'home_feed/show'
-  get 'home_feed/subscribe'
-
-  #helper methods, to remove from this list after development
-  get 'access/startLinkedInAuth'
-  get 'event/createGoogleDoc'
-  get 'event/createGoogleHangoutOnAir'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

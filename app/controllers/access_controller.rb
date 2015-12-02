@@ -1,7 +1,7 @@
 
 class AccessController < ApplicationController
 
-	before_action :confirm_logged_in, :except => [:login, :startLinkedInAuth, :finishLinkedInAuth, :logout, :locked]
+  before_action :confirm_logged_in, :except => [:login, :startLinkedInAuth, :finishLinkedInAuth, :logout, :locked]
 
   def login
 	#login form

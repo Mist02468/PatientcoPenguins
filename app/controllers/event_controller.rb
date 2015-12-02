@@ -1,6 +1,6 @@
 class EventController < ApplicationController
 
-	before_action :confirm_logged_in
+  before_action :confirm_logged_in
   
   def new
     @event = Event.new

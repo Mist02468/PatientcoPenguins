@@ -1,6 +1,6 @@
 class ProfileController < ApplicationController
 
-	before_action :confirm_logged_in
+  before_action :confirm_logged_in
 
   def report
 		if params[:reported_user_id].present?
@@ -25,12 +25,6 @@ class ProfileController < ApplicationController
 			puts @report.to_s
 			redirect_to(controller: "profile", :action => "show", :user_id => params[:reported_user_id])
 		end
-  end
-
-  def message
-  end
-
-  def subscribe
   end
 
   def show
