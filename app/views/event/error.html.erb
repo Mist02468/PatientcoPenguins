@@ -1,4 +1,6 @@
+<!-- view for catching screen scraping errors on events -->
 <div>
-    ERROR (<%= @exceptionMessage %>) occurred when screen scraper was on this page:
-    <%= image_tag("error.png") %>
+  <!-- gracefully deal with error -->
+  ERROR (<%= @exceptionMessage %>) occurred when screen scraper was on this page:
+  <%= image_tag("error.png") %>
 </div>
