@@ -1,17 +1,20 @@
 <!--<%= stylesheet_link_tag('post.scss') %>-->
 
+
+<!-- Form to Create a Post -->
 <div class="postDiv">
-	<h2> Create a Post</h2>
-	<%= form_tag({:action => 'new'}, {:id => 'tagForm'}) do %>
+    <h2> Create a Post</h2>
+    <!-- Handle Tags -->
+    <%= form_tag({:action => 'new'}, {:id => 'tagForm'}) do %>
         <%= hidden_field_tag(:currentPostText, @post.text, :class => 'save-currentPostText') %>
-		<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
-		<%= text_field(:tag, :name, :placeholder => "type tag here", :size => 20, :class => "tag_box") %>
-		<%= submit_tag("Add Tag to Post", :class => "button") %>
+        <%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
+        <%= text_field(:tag, :name, :placeholder => "type tag here", :size => 20, :class => "tag_box") %>
+        <%= submit_tag("Add Tag to Post", :class => "button") %>
         <div id="tagError"></div>
-	<% end %>
-	<ul>
-		<% @tagsToAdd.each do |t| %>
-				<li class="tag">
+    <% end %>
+    <ul>
+        <% @tagsToAdd.each do |t| %>
+                <li class="tag">
                     <div style="float:left;">
                         <%= t %>
                     </div>
@@ -24,20 +27,22 @@
                         <% end %>
                     </div>
                 </li>
-		<% end %>
-	</ul>
+        <% end %>
+    </ul>
 <br>
 <br>
 <br>
-	<%= form_tag({:action => 'create'}, {:id => 'postForm'}) do %>
-		<%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
-		<%= text_area(:post, :text, :id => "postTextField", :class => "text_field", :placeholder => "write post here", :onchange => "updateHiddenFieldsWithCurrentText()") %><br>
-		<%= submit_tag("Post", :class => "button_submit") %>
+    <!-- Ruby Post Form -->
+    <%= form_tag({:action => 'create'}, {:id => 'postForm'}) do %>
+        <%= hidden_field_tag(:tagsToAdd, @tagsToAdd) %>
+        <%= text_area(:post, :text, :id => "postTextField", :class => "text_field", :placeholder => "write post here", :onchange => "updateHiddenFieldsWithCurrentText()") %><br>
+        <%= submit_tag("Post", :class => "button_submit") %>
         <div id="postError"></div>
-	<% end %>
+    <% end %>
 </div>
 
 <script>
+// Function to Update the Hidden Fields
 function updateHiddenFieldsWithCurrentText() {
     $(".save-currentPostText").each(function() {
         $(this).val($("#postTextField").val())
@@ -46,10 +51,12 @@ function updateHiddenFieldsWithCurrentText() {
     
 $(document).ready(function () {
 
+    // Tag Space Validation
     $.validator.addMethod('tagHasNoSpaces', function (value) {
         return /^[^ ]*$/.test(value);
     }, 'Please enter a tag without spaces');
 
+    // Validation of Tags
     $("#tagForm").validate({
             onkeyup: false,
             onclick: false,
@@ -66,6 +73,7 @@ $(document).ready(function () {
             }
     })
 
+    // Validation of Form
     $("#postForm").validate({
             onkeyup: false,
             onclick: false,

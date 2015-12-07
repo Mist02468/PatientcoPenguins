@@ -1,6 +1,8 @@
+<!-- Include link to stylesheet -->
 <%= stylesheet_link_tag('event.scss') %>
 
 <div class="eventDiv">
+    <!-- If the Status is set to scheduled -->
     <% if @status == 'scheduled' %>
         <% if @user.id != @event.host.id %>
             <p>You're invited by <%= link_to "#{@event.host.firstName} #{@event.host.lastName}", 
@@ -8,13 +10,16 @@
         <% else %>
             <p>You will host:</p>
         <% end %>
+    <!-- If the Status is set to live -->
     <% elsif @status == 'live' %>
+        <!-- Check host -->
         <% if @user.id != @event.host.id %>
             <p><%= link_to "#{@event.host.firstName} #{@event.host.lastName}", 
                    controller: "profile", action: 'show', user_id: @event.host.id, :class => "link" %> is hosting:</p>
         <% else %>
             <p>You are hosting:</p>
         <% end %>
+    <!-- Otherwise -->
     <% else %>
         <% if @user.id != @event.host.id %>
             <p><%= link_to "#{@event.host.firstName} #{@event.host.lastName}", 
@@ -24,7 +29,9 @@
         <% end %>
     <% end %>
     
+    <!-- This contains information about the roundtable -->
     <p class='eventInfo'><%= @event.topic %> Roundtable Discussion</p>
+    <!-- Date of the event and share button -->
     <div class="eventDateAndShare">
         <div class = "eventDate">
             <h3>on <%= @event.startTime.in_time_zone.strftime(" %m/%d/%Y at %I:%M%p") %></h3>
@@ -36,6 +43,7 @@
     </div>
     <br>
     <ul>
+        <!-- Print out tags in list -->
         <% @event.tags.each do |t| %>
             <li class="tag"><%= link_to t.name, controller: "home_feed", action: 'show', tag_id: t.id %></li>
         <% end %>
@@ -43,10 +51,12 @@
     <% if @user.id == @event.host.id and @status != 'finished' %>
         <br>
         <br>
+        <!-- Event Start Button -->
         <% if @status == 'scheduled' %>
             <div class="center">
                     <%= button_to "Start this Event", {action: 'start', id: @event.id}, class: "button" %>
             </div>
+        <!-- Open Discussion Button -->
         <% else %>
             <div class="center">
                 <div style="display: inline">
@@ -62,9 +72,12 @@
     <% end %>
 </div>
 
+<!-- Handle Completed Events -->
 <% if @status == 'finished' or (@status == 'live' and @user.id != @event.host.id) %>
     <br>
     <br>
+
+    <!-- Link to Youtube Video -->
     <div width="50%" style="float:left;">
         <div class="center">
             <p>Watch the discussion:</p>
@@ -77,6 +90,7 @@
         <% end %>
     </div>
         
+    <!-- Link to Collaborative Note Document -->
     <div width="50%" style="float:right;">
         <div class="center">
             <p>Take collaborative notes:</p>

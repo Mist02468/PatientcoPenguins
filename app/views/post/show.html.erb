@@ -1,5 +1,7 @@
 <!--<%= stylesheet_link_tag('post.scss') %>-->
+<!-- Display Post -->
 <div class="postDiv">
+  <!-- Generate Values from Post object -->
   <p> <%= link_to "#{@post.user.firstName} #{@post.user.lastName}",
    controller: "profile", action: 'show', user_id: @post.user.id, :class => "link"%> said:</p>
   <p class="post"><%= @post.text %></p>
@@ -11,10 +13,13 @@
   </ul>
 </div>
 </br>
+
+
 <div class="postDiv">
 </br>
   <hr/>
   <table>
+    <!-- Print out each of the available comments -->
     <% @comments.each do |c| %>
       <tr>
         <td><%= c.text %></td>
@@ -27,6 +32,7 @@
   </br>
   <h2>New comment</h2>
 
+  <!-- New Comment Creation -->
   <%= form_tag({:action => "create"}, {:id => "commentForm"}) do %>
 
     <div>
@@ -45,6 +51,7 @@
 <script>
 $(document).ready(function () {
 
+    // Validate Comment Form
     $("#commentForm").validate({
             onkeyup: false,
             onclick: false,

@@ -9,6 +9,8 @@
 	<% else %>
 	    <h1>Home</h1>
 	<% end %>
+
+	<!-- Pulling Recent Posts -->
 	<div style="width:50%; float:left">
 		<table>
 			<h3>Recent Posts</h3>
@@ -16,8 +18,11 @@
 				<div class = "highlight_row">
 				    <tr>
 				    	<td width="330px">
+				    		<!-- Link to the article -->
 					    	<div class="linkToArticle"><%= link_to "#{post.text}", controller: "post", action: "show", id: post.id %></div><br>
+					    	<!-- Time of Post -->
 					    	<div style="font-size:14px; color:grey;"><%= post.created_at.in_time_zone("Eastern Time (US & Canada)").strftime("%m/%d/%Y at %I:%M%p") %></div><br>
+				    		<!-- Host Profile -->
 					    	<div style="float:right;">
 					    	<%= link_to "#{post.user.firstName} #{post.user.lastName}", controller: "profile", action: 'show', user_id: post.user.id%></div>
 				    	</td>
@@ -26,6 +31,8 @@
 			<% end %>
 		</table>
 	</div>
+
+	<!-- Pulling Recent Events -->
 	<div style="width:50%; float:left">
 		<table>
 			<h3>Recent Events</h3>
@@ -33,8 +40,11 @@
 				<div class = "highlight_row">
 				    <tr>
 				    	<td width="240px">
+				    		<!-- Link to the event -->
 				    		<div class="linkToEvent"><%= link_to "#{event.topic}", controller: "event", action: "show", id: event.id %></div><br>
+				    		<!-- Time of Event -->
 				    		<div style="font-size:14px; color:grey;"><%= event.created_at.in_time_zone("Eastern Time (US & Canada)").strftime("%m/%d/%Y at %I:%M%p") %></div><br>
+				    		<!-- Host Profile -->
 					    	<div style="float:right;">
 					    	<%= link_to "#{event.host.firstName} #{event.host.lastName}", controller: "profile", action: 'show', user_id: event.host.id%>
 					    	</div>

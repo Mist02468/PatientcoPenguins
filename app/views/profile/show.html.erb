@@ -20,6 +20,7 @@ padding:20px;
 </head>
 <body>
 	<div class="postDiv">
+		<!-- Business Card w/ Profile Information -->
 		<div width="50%" style="float:left;">
 			<p class="a">
 				<font size="6" color=green> <%= @user.firstName %> </font>
@@ -35,6 +36,7 @@ padding:20px;
 				<font size="3"> <%= @user.company %> </font>
 				<br></br>
 				<font size="3"> <%= @user.position %> </font>
+        <!-- Report Capability -->
         <%if @is_user%>
           <p> You cannot report yourself. </p>
         <% elsif @reportable %>
@@ -50,6 +52,8 @@ padding:20px;
         <% end %>
 			</p>
 		</div>
+
+		<!-- Display Activity From this User -->
 		<div width="50%" style="float:right; max-width:425px; padding-top:8px;">
 			<div class="posts">
 				<table>
